@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import csv
 import urllib2
+import ConfigParser
 from imdb import IMDb
 
 class IMDB_Site():
@@ -26,7 +27,8 @@ class IMDB_CSV():
 
     def handle(self):
         reader = csv.reader(open(self.imdb.file_movies, "r"), dialect='excel')
-        IMDB_File().create_file(reader)
+        #IMDB_File().create_file(reader)
+        #pass
 
 
 class IMDB_File():
@@ -45,6 +47,7 @@ class IMDB_File():
                 continue
 
             movie_id = int(row[1][2:])
+            print movie_id
 
             self.call_python_api(movie_id, filename, row)
             #self.call_imdbapi(movie_id, filename)
@@ -77,6 +80,7 @@ class IMDB_File():
 #Init
 #----------------------------------------
 if __name__ == "__main__":
-
-    link_export = "http://www.imdb.com/list/export?list_id=ratings&author_id=ur"
+    config = ConfigParser.ConfigParser()
+    config.read("imdb.cfg")
+    link_export = "http://www.imdb.com/list/export?list_id=ratings&author_id=ur" + config.get("imdb", "id")
     IMDB_CSV(link_export).handle()
