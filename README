@@ -1,0 +1,9 @@
+install
+pip install IMDbPY
+pip install pymongo
+
+mongodb
+
+configure
+imdb/imdb.cfg
+id number of your imdb
