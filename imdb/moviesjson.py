@@ -10,14 +10,11 @@ header = f.readline()
 
 
 reader = csv.DictReader( f, fieldnames = ( header.replace("\"", "").split(",") ) )
-out = json.dumps( [ row for row in reader ] )
+stringfile = json.dumps( [ row for row in reader ] , indent=4)
+movies_json = json.loads(stringfile)
 
-print type(out)
+#print len(jsonfile)
 
+for movie in movies_json:
+    print movie.get("Directors")
 
-#print out[0]
-
-#for row in reader:
-#	print row
-
-#print len(reader)
