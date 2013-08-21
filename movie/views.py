@@ -11,9 +11,11 @@ class MovieData():
 		self.nome = "Number"
 		self.title = "Top Directors Watched"
 
-def index(resquest):
-    mongodb = MongoDBConnection()
-    data = mongodb.top_directors_watched(5)
-    moviedata = MovieData()
-    return render_to_response("charts/index.html", {'data' : data, "moviedata" : moviedata})
+def index(request):
+    if request.method == 'POST':
+        imdb_id = request.POST.getlist("your_IMDB_ID")[0]
+        mongodb = MongoDBConnection()
+        data = mongodb.top_directors_watched(5)
+        moviedata = MovieData()
+    return render_to_response("charts/index.html", {'data' : data, "moviedata" : moviedata, "imdbid" : imdb_id})
 
