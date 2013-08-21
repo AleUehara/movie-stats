@@ -18,17 +18,11 @@
         // Create the data table.
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Year');
-        data.addColumn('number', 'NUmber');
-        data.addRows([
-          ['2013', 3],
-          ['2012', 1],
-          ['2011', 1],
-          ['2010', 1],
-          ['2009', 2]
-        ]);
+        data.addColumn('number', '{{ moviedata.name }}');
+        data.addRows( {{ data|safe }} );
 
         // Set chart options
-        var options = {'title':'Number of Movies by Year',
+        var options = {'title':'{{moviedata.title}}',
                        'width':400,
                        'height':300};
 
@@ -42,5 +36,6 @@
   <body>
     <!--Div that will hold the pie chart-->
     <div id="chart_div"></div>
+
   </body>
 </html>

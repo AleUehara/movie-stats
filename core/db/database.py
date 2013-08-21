@@ -30,16 +30,12 @@ class MongoDBConnection():
                                                     {"$sort": SON([("_id", -1), ("avg", -1)])}
                                                    ]
                                                  )
-        #for i in result.get("result"):
-        #    print i.get("_id") +"-->"+ str(i.get("avg"))
         returnlist = []
         for i in result.get("result"):
-            #returnlist[i]
-            #print i
-            #print i.get("_id") +"-->"+ str(i.get("avg"))
             movielist = [i.get("_id"), i.get("avg")]
             returnlist.append(movielist)
         print returnlist
+        return returnlist
 
     def movies_by_directors(self):
         result = self.mongo_collection.aggregate( [
@@ -64,8 +60,16 @@ class MongoDBConnection():
                                                     {"$limit" : top_number}
                                                    ]
                                                  )
+        #for i in result.get("result"):
+        #    print i.get("_id") +"-->"+ str(i.get("count"))
+
+        returnlist = []
         for i in result.get("result"):
-            print i.get("_id") +"-->"+ str(i.get("count"))
+            movielist = [str(i.get("_id")), i.get("count")]
+            returnlist.append(movielist)
+        return returnlist
+
+
 
     def movies_by_year(self):
         for i in aggregation.get("result"):
