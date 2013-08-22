@@ -18,14 +18,16 @@ class MovieData():
 
 def index(request):
     if request.method == 'POST':
-        imdb_id = request.POST.getlist("your_IMDB_ID")[0]
-        link_export = "http://www.imdb.com/list/export?list_id=ratings&author_id=ur" + imdb_id
-        IMDB_CSV(link_export).handle()
-        jsonfile = IMDBMovieJson(os.path.join(ROOT_DIR, "core", "movieimdb", "temp", "movies.csv")).convert_csv_to_json()
+        imdbid = request.POST.getlist("your_IMDB_ID")[0]
+        jsonfile = connect_imdb(imdbid)
 
         mongodb = MongoDBConnection()
         mongodb.insert_collection(jsonfile)
         data = mongodb.top_directors_watched(5)
         moviedata = MovieData()
-    return render_to_response("charts/index.html", {'data' : data, "moviedata" : moviedata, "imdbid" : imdb_id})
+    return render_to_response("charts/index.html", {'data' : data, "moviedata" : moviedata, "imdbid" : imdbid})
+
+def connect_imdb(imdbid):
+        imdbcsv = IMDB_CSV(imdbid)
+        return IMDBMovieJson(imdbcsv.csvfilename).convert_csv_to_json()
 

@@ -11,15 +11,16 @@ from movieimdb.extract_csv import IMDB_CSV
 def main():
     
     config = ConfigParser.ConfigParser()
-    config.read("movieimdb/imdb.cfg")
-    link_export = "http://www.imdb.com/list/export?list_id=ratings&author_id=ur" + config.get("imdb", "id")
-    IMDB_CSV(link_export).handle()
+    CFG_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), "movieimdb", "imdb.cfg")
+    config.read(CFG_FILE)
+    imdbid = config.get("imdb", "id")
+    imdbcsv = IMDB_CSV(imdbid)
     
 
 
 
 
-    jsonfile = IMDBMovieJson('movieimdb/temp/movies.csv').convert_csv_to_json()
+    jsonfile = IMDBMovieJson(imdbcsv.csvfilename).convert_csv_to_json()
     #print jsonfile
     mongodb = MongoDBConnection()
     mongodb.insert_collection(jsonfile)
@@ -30,8 +31,8 @@ def main():
     #mongodb.top_directors_watched(5)
     #mongodb.movies_by_year()
     #mongodb.directors_rating()
-    mongodb.movies_rates_by_year()
-    #mongodb.total_minutes_watched()
+    #mongodb.movies_rates_by_year()
+    mongodb.total_minutes_watched()
 
 
 #----------------------------------------
