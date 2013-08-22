@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import os
 import csv
 import urllib2
 import ConfigParser
 from imdb import IMDb
+from settings import ROOT_DIR
 
 class IMDB_Site():
     def __init__(self):
-        self.file_movies = "movieimdb/temp/movies.csv"
+        self.file_movies = os.path.join(ROOT_DIR, "core", "movieimdb", "temp", "movies.csv")
 
     def download_csv(self, link):
         response = urllib2.urlopen(link)
@@ -33,7 +35,7 @@ class IMDB_CSV():
 
 class IMDB_File():
     def __init__(self):
-        self.filename = "movieimdb/temp/movies.temp"
+        self.filename = os.path.join(ROOT_DIR, "core", "movieimdb", "temp", "movies.temp")
 
     def create_file(self, reader):
         filename = open(self.filename, 'w')
