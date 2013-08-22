@@ -5,7 +5,8 @@ import csv
 import urllib2
 import ConfigParser
 from imdb import IMDb
-from settings import ROOT_DIR
+#from settings import ROOT_DIR
+ROOT_DIR="/home/alexandre/scripts/moviestats"
 
 class IMDB_Site():
     def __init__(self):
@@ -29,10 +30,9 @@ class IMDB_CSV():
 
     def handle(self):
         reader = csv.reader(open(self.imdb.file_movies, "r"), dialect='excel')
-        IMDB_File().create_file(reader)
-        #pass
+        #IMDB_File().create_file(reader)
 
-
+'''
 class IMDB_File():
     def __init__(self):
         self.filename = os.path.join(ROOT_DIR, "core", "movieimdb", "temp", "movies.temp")
@@ -77,6 +77,7 @@ class IMDB_File():
         json = urllib2.urlopen('http://imdbapi.com/?i=' + str(movie_id) + '&r=json')
 
         print json.read()
+'''
 
 #----------------------------------------
 #Init

@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 import os
 os.path.dirname(os.path.abspath(__file__))
-from movieimdb.moviejson import IMDBMovies
+from movieimdb.moviejson import IMDBMovieJson
 from db.database import MongoDBConnection
 import ConfigParser
 from movieimdb.extract_csv import IMDB_CSV
@@ -19,7 +19,7 @@ def main():
 
 
 
-    jsonfile = IMDBMovies('movieimdb/temp/movies.csv').convert_csv_to_json()
+    jsonfile = IMDBMovieJson('movieimdb/temp/movies.csv').convert_csv_to_json()
     #print jsonfile
     mongodb = MongoDBConnection()
     mongodb.insert_collection(jsonfile)
