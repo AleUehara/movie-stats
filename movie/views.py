@@ -20,6 +20,8 @@ def index(request):
         mongodb.insert_collection(jsonfile)
         directors_rating = DirectorsRating(mongodb.collection)
         directors_rating_list = DirectorsRating(mongodb.collection).find()
+        mongodb.drop_collection()
+        
     return render_to_response("charts/index.html", {'data' : directors_rating_list, "moviedata" : directors_rating.title, "imdbid" : imdbid})
 
 def connect_imdb(imdbid):
