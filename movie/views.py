@@ -13,16 +13,21 @@ from settings import ROOT_DIR
 
 def index(request):
     if request.method == 'POST':
-        imdbid = request.POST.getlist("your_IMDB_ID")[0]
-        jsonfile = connect_imdb(imdbid)
+        try:
+            imdbid = request.POST.getlist("your_IMDB_ID")[0]
+            jsonfile = connect_imdb(imdbid)
+        except:
+            render_to_response("404.html")
+
 
         mongodb = MongoDBConnection()
         mongodb.insert_collection(jsonfile)
-        directors_rating = DirectorsRating(mongodb.collection)
-        directors_rating_list = DirectorsRating(mongodb.collection).find()
-        mongodb.drop_collection()
         
-    return render_to_response("charts/index.html", {'data' : directors_rating_list, "moviedata" : directors_rating.title, "imdbid" : imdbid})
+        directors_rating = DirectorsRating(mongodb.collection)
+
+        mongodb.drop_collection()
+
+    return render_to_response("charts/index.html", {'directors_rating' : directors_rating, "imdbid" : imdbid})
 
 def connect_imdb(imdbid):
         imdbcsv = IMDB_CSV(imdbid)

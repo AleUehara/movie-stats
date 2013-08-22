@@ -21,12 +21,15 @@ class IMDB_Site():
         self.imdbid      = imdbid
 
     def download_csv(self, link, csvfilename):
-        response = urllib2.urlopen(link)
-        movie_data = response.read()
+        try:
+            response = urllib2.urlopen(link)
+            movie_data = response.read()
 
-        filename = open(csvfilename, 'w')
-        filename.write(movie_data)
-        filename.close()
+            filename = open(csvfilename, 'w')
+            filename.write(movie_data)
+            filename.close()
+        except:
+            raise Exception("erro")
 
 
 

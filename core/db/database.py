@@ -105,43 +105,41 @@ class MongoDBConnection():
 
 class IMDB_Data():
   def __init__(self):
-    pass
+    self.values = []
 
-  def execute_aggregate(self, query):
-        result = self.collection.aggregate( query )
-
-        return self.__create_return_list(result, "_id", "average")
+  def execute_aggregate(self):
+        result = self.collection.aggregate( self.query )
+        self.__create_return_list(result, "_id", "average")
 
   
   def __create_return_list(self, result, first_column_name, second_column_name):
-    returnlist = []
     for i in result.get("result"):
         movielist = [str(i.get(first_column_name)), i.get(second_column_name)]
-        returnlist.append(movielist)
+        self.values.append(movielist)
     
-    return returnlist
+
+class IMDBAggregation(IMDB_Data):
+  def __init__(self):
+     IMDB_Data.__init__(self)
+     self.execute_aggregate()
 
 
-class DirectorsRating(IMDB_Data):
+class DirectorsRating(IMDBAggregation):
   def __init__(self, movie_collection):
      self.collection = movie_collection
      self.title = "Top Directors Rating"
-     IMDB_Data.__init__(self)
+     self.query = [
+                    {"$group":{"_id":"$Directors", 
+                               "average": {"$avg": "$rated"},
+                               "count": {"$sum": 1}
+                              }
+                    },
+                    {"$sort": SON([("average", -1), ("_id", -1)])},
+                    {"$limit" : 5}
+                  ]
 
-  def find(self):
-        query = [
-                  {"$group":{"_id":"$Directors", 
-                             "average": {"$avg": "$rated"},
-                             "count": {"$sum": 1}
-                            }
-                  },
-                  {"$sort": SON([("average", -1), ("_id", -1)])},
-                  {"$limit" : 5}
-                ]
-        
-        return self.execute_aggregate(query)
+     IMDBAggregation.__init__(self)
 
-        
 
 
 #----------------------------------------
