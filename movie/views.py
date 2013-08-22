@@ -5,7 +5,7 @@ import os
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
-from core.db.database import MongoDBConnection, DirectorsRating
+from core.db.database import MongoDBConnection, DirectorsRating, TotalMinutesWatched
 from core.movieimdb.moviejson import IMDBMovieJson
 from core.movieimdb.extract_csv import IMDB_CSV
 from settings import ROOT_DIR
@@ -24,6 +24,8 @@ def index(request):
         mongodb.insert_collection(jsonfile)
         
         directors_rating = DirectorsRating(mongodb.collection)
+
+        #print TotalMinutesWatched(mongodb.collection)
 
         mongodb.drop_collection()
 

@@ -91,37 +91,53 @@ class MongoDBConnection():
             print i.get("_id") +"-->"+ str(i.get("count"))
 
 
-    def total_minutes_watched(self):
-        result = self.collection.aggregate( [
-                                                    {"$group":{"_id":"", 
-                                                              "sum_runtime": {"$sum": "$Runtime (mins)"}
-                                                              }
-                                                    }
-                                                   ]
-                                                 )
-        minutes_watched = result.get("result")[0].get("sum_runtime")
-        print str(minutes_watched / 60) + " hours or " + str(minutes_watched) + " minutes"
+
+
+
+
+
+
+
+
 
 
 class IMDB_Data():
   def __init__(self):
     self.values = []
 
-  def execute_aggregate(self):
+  def execute_aggregate_list(self):
         result = self.collection.aggregate( self.query )
-        self.__create_return_list(result, "_id", "average")
+        print "INICIO"
+        print self.columns
+        self.create_return(result, self.columns)
 
   
-  def __create_return_list(self, result, first_column_name, second_column_name):
+  def create_return(self, result, columns_name):
     for i in result.get("result"):
-        movielist = [str(i.get(first_column_name)), i.get(second_column_name)]
+        movielist = []
+        for column_name in columns_name:
+            print column_name
+          
+            key = column_name.keys()[0]
+            if column_name.values()[0] == "str":
+              movielist.append(str(i.get(key)))
+            elif column_name.values()[0] == "int":
+              movielist.append(int(i.get(key)))
+        print "=============="
+        
         self.values.append(movielist)
     
+        
+
+
+
+
 
 class IMDBAggregation(IMDB_Data):
   def __init__(self):
      IMDB_Data.__init__(self)
-     self.execute_aggregate()
+     self.execute_aggregate_list()
+
 
 
 class DirectorsRating(IMDBAggregation):
@@ -137,10 +153,31 @@ class DirectorsRating(IMDBAggregation):
                     {"$sort": SON([("average", -1), ("_id", -1)])},
                     {"$limit" : 5}
                   ]
-
+     self.columns = [{"_id" :"str"}, {"average" : "int"}]
      IMDBAggregation.__init__(self)
 
 
+
+class TotalMinutesWatched(IMDBAggregation):
+  def __init__(self, movie_collection):
+      self.collection = movie_collection
+      self.title = "Total Minutes Watched"
+      self.query = [
+                  {"$group":{"_id":"", 
+                             "sum_runtime": {"$sum": "$Runtime (mins)"}
+                            }
+                  }
+                 ]
+      self.columns = [{"sum_runtime" : "int"}]
+      IMDBAggregation.__init__(self)
+
+  def create_return(self, result, first_column_name, second_column_name=""):
+        #minutes_watched = result.get("result")[0].get("sum_runtime")
+        minutes_watched = result.get("result")[0].get(first_column_name)
+        print '--------------------------'
+        print minutes_watched
+        #return str(minutes_watched / 60) + " hours or " + str(minutes_watched) + " minutes"
+        return "teste"
 
 #----------------------------------------
 #Init
