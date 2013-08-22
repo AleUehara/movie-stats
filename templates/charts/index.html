@@ -17,7 +17,7 @@
           );
 
         // Set chart options
-        var options = {'title':'{{moviedata.title}}',
+        var options = {
                        'width':400,
                        'height':300,
                         is3D: true,
@@ -42,7 +42,7 @@
           data.addRows( {{ data|safe }} );
 
           // Set chart options
-          var options = {'title':'{{moviedata.title}}',
+          var options = {
                        'width':400,
                        'height':300};
 
@@ -64,7 +64,30 @@
         }
     </script>
     <div id="imdb_id">YOUR ID: {{imdbid}}</div>
-    <div id="chart_div"></div>
-    <div id="mouseoverdiv"></div>
+    <!--<div id="chart_div"></div>
+    <div id="mouseoverdiv"></div>-->
+    <div class="row-fluid marketing">
+      <div class="span6">
+        <h4>{{moviedata.title}}</h4>
+        <p><div id="chart_div"></div></p>
+
+        <h4>Test</h4>
+        <p>2Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+        <h4>Subheading</h4>
+        <p>3Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+      </div>
+
+      <div class="span6">
+        <h4>{{moviedata.title}}</h4>
+        <p><div id="mouseoverdiv"></div></p>
+
+        <h4>Subheading</h4>
+        <p>5Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+        <h4>Subheading</h4>
+        <p>6Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+      </div>
+    </div>
 
 {% endblock %}
