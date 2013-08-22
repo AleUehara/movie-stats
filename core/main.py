@@ -30,9 +30,9 @@ def main():
     #mongodb.movies_by_directors()
     #mongodb.top_directors_watched(5)
     #mongodb.movies_by_year()
-    #mongodb.directors_rating()
+    print mongodb.directors_rating()
     #mongodb.movies_rates_by_year()
-    mongodb.total_minutes_watched()
+    #mongodb.total_minutes_watched()
 
 
 #----------------------------------------

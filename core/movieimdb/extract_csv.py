@@ -5,7 +5,10 @@ import csv
 import urllib2
 import ConfigParser
 from imdb import IMDb
-from settings import ROOT_DIR
+try:
+    from settings import ROOT_DIR
+except:
+    ROOT_DIR=os.path.realpath(__file__)
 
 CONFIG = ConfigParser.ConfigParser()
 CONFIG.read(os.path.join(os.path.dirname(os.path.realpath(__file__)), "imdb.cfg"))

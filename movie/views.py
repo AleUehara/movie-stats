@@ -5,16 +5,11 @@ import os
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
-from core.db.database import MongoDBConnection
+from core.db.database import MongoDBConnection, DirectorsRating
 from core.movieimdb.moviejson import IMDBMovieJson
 from core.movieimdb.extract_csv import IMDB_CSV
 from settings import ROOT_DIR
 
-
-class MovieData():
-	def __init__(self):
-		self.nome = "Number"
-		self.title = "Top Directors Watched"
 
 def index(request):
     if request.method == 'POST':
@@ -23,9 +18,9 @@ def index(request):
 
         mongodb = MongoDBConnection()
         mongodb.insert_collection(jsonfile)
-        data = mongodb.top_directors_watched(5)
-        moviedata = MovieData()
-    return render_to_response("charts/index.html", {'data' : data, "moviedata" : moviedata, "imdbid" : imdbid})
+        directors_rating = DirectorsRating(mongodb.collection)
+        directors_rating_list = DirectorsRating(mongodb.collection).find()
+    return render_to_response("charts/index.html", {'data' : directors_rating_list, "moviedata" : directors_rating.title, "imdbid" : imdbid})
 
 def connect_imdb(imdbid):
         imdbcsv = IMDB_CSV(imdbid)

@@ -17,7 +17,7 @@ class IMDBMovieJson():
         movie_list = []
 
         for row in reader:
-           row["uehara-alexandre rated"] = int(row["uehara-alexandre rated"])
+           row["rated"] = int(row["uehara-alexandre rated"])
            row["IMDb Rating"] = float(row["IMDb Rating"])
            row["Runtime (mins)"] = 0 if row["Runtime (mins)"] is "" else int(row["Runtime (mins)"])
            movie_list.append(row)

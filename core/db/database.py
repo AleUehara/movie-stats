@@ -6,25 +6,25 @@ class MongoDBConnection():
     def __init__(self):
         client = MongoClient('localhost', 27021)
         self.db = client.movies
-        self.mongo_collection = self.db.movie_collection
+        self.collection = self.db.movie_collection
 
     def insert_collection(self, jsonfile):
-        self.mongo_collection.drop()
-        insert_id = self.mongo_collection.insert(jsonfile)
+        self.collection.drop()
+        insert_id = self.collection.insert(jsonfile)
 
     def select_one(self):
-        print self.mongo_collection.find_one()
+        print self.collection.find_one()
 
     def count(self):
-        print self.mongo_collection.count()
+        print self.collection.count()
 
     def all_rates(self):
         pass
 
     def movies_rates_by_year(self):
-        result = self.mongo_collection.aggregate( [
+        result = self.collection.aggregate( [
                                                     {"$group":{"_id":"$Year", 
-                                                              "avg": {"$avg": "$uehara-alexandre rated"}
+                                                              "avg": {"$avg": "$rated"}
                                                               }
                                                     },
                                                     {"$sort": SON([("_id", -1), ("avg", -1)])}
@@ -38,7 +38,7 @@ class MongoDBConnection():
         return returnlist
 
     def movies_by_directors(self):
-        result = self.mongo_collection.aggregate( [
+        result = self.collection.aggregate( [
                                                     {"$group":{"_id":"$Directors", 
                                                               "count": {"$sum": 1}
                                                               }
@@ -51,7 +51,7 @@ class MongoDBConnection():
         print "-------------------"
 
     def top_directors_watched(self, top_number):
-        result = self.mongo_collection.aggregate( [
+        result = self.collection.aggregate( [
                                                     {"$group":{"_id":"$Directors", 
                                                               "count": {"$sum": 1}
                                                               }
@@ -76,7 +76,7 @@ class MongoDBConnection():
             print str(i.get("total")) +"-->"+ i.get("_id")
 
 
-        result1 = self.mongo_collection.aggregate( [
+        result1 = self.collection.aggregate( [
                                                     {"$group":{"_id":"$Year", 
                                                               "count": {"$sum": 1}
                                                               }
@@ -88,22 +88,8 @@ class MongoDBConnection():
             print i.get("_id") +"-->"+ str(i.get("count"))
 
 
-    def directors_rating(self):
-        result = self.mongo_collection.aggregate( [
-                                                    {"$group":{"_id":"$Directors", 
-                                                              "average": {"$avg": "$uehara-alexandre rated"},
-                                                              "count": {"$sum": 1}
-                                                              }
-                                                    },
-                                                    {"$sort": SON([("average", -1), ("_id", -1)])}
-                                                   ]
-                                                 )
-        for i in result.get("result"):
-            print i.get("_id") +"-->"+ str(i.get("average")) +"-->"+str(i.get("count"))
-
-
     def total_minutes_watched(self):
-        result = self.mongo_collection.aggregate( [
+        result = self.collection.aggregate( [
                                                     {"$group":{"_id":"", 
                                                               "sum_runtime": {"$sum": "$Runtime (mins)"}
                                                               }
@@ -112,6 +98,34 @@ class MongoDBConnection():
                                                  )
         minutes_watched = result.get("result")[0].get("sum_runtime")
         print str(minutes_watched / 60) + " hours or " + str(minutes_watched) + " minutes"
+
+class DirectorsRating():
+  def __init__(self, movie_collection):
+     self.collection = movie_collection
+     self.title = "Top Directors Rating"
+     
+  def find(self):
+        result = self.collection.aggregate( [
+                                                    {"$group":{"_id":"$Directors", 
+                                                              "average": {"$avg": "$rated"},
+                                                              "count": {"$sum": 1}
+                                                              }
+                                                    },
+                                                    {"$sort": SON([("average", -1), ("_id", -1)])},
+                                                    {"$limit" : 5}
+                                                   ]
+                                                 )
+        #for i in result.get("result"):
+        #    print i.get("_id") +"-->"+ str(i.get("average")) +"-->"+str(i.get("count")) + "\n"
+
+        
+        returnlist = []
+        for i in result.get("result"):
+            movielist = [str(i.get("_id")), i.get("average")]
+            returnlist.append(movielist)
+        
+        return returnlist
+
 
 #----------------------------------------
 #Init
