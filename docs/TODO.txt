@@ -1,0 +1,14 @@
+1) Refactor js
+2) Refactor class from each chart query py
+3) Loading gif
+4) 404
+5) id not exists
+6) contacts
+7) developer
+8) csv in memory
+9) imdb-id on mongo
+10) rated: remove name of user
+11) Config imdb link --> ok
+12) Actors on mongodb
+13) Just numbers on imdbid
+14) Find imdb id (print from imdb)
