@@ -1,4 +1,4 @@
-# Django settings for moviestats project.
+# Django settings for moviestatz project.
 import os
 ROOT_DIR = os.path.realpath(os.path.dirname(__file__))
 
@@ -75,7 +75,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(ROOT_DIR, 'templates'),
-    #"/Users/alexandreuehara/Developer/moviestats/templates"
+    #"/Users/alexandreuehara/Developer/moviestatz/templates"
 )
 
 # List of finder classes that know how to find static files in
@@ -104,7 +104,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'moviestats.urls'
+ROOT_URLCONF = 'moviestatz.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
