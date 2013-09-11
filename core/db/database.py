@@ -1,4 +1,5 @@
 from pymongo import Connection, MongoClient
+from bson.objectid import ObjectId
 from bson.son import SON
 from bson.code import Code
 
@@ -8,15 +9,21 @@ class MongoDBConnection():
         self.db = client.movies
         self.collection = self.db.movie_collection
 
-    def insert_collection(self, jsonfile):
+    def insert_collection(self, imdbid, jsonfile):
         self.drop_collection()
-        insert_id = self.collection.insert(jsonfile)
+        self.imdbid = {"userid" : imdbid}
+        self.collection.insert(  {"userid" : imdbid, "movies" : jsonfile} )
+        
+        
 
     def drop_collection(self):
         self.collection.drop()
 
     def select_one(self):
-        print self.collection.find_one()
+        print self.collection.find_one({"userid" : "45031138"})
+
+    def select_all(self):
+        print self.collection.find()
 
     def count(self):
         print self.collection.count()
@@ -24,8 +31,21 @@ class MongoDBConnection():
     def all_rates(self):
         pass
 
+    def test(self):
+        result = self.collection.aggregate( [       {"$match" : {"userid" : "45031138"}, "$match": {"movies" : 1}},
+                                                    #{"$match": {"movies" : 1}}
+                                                    #{"$group":{"_id":"$Year", 
+                                                    #          "avg": {"$avg": "$rated"}
+                                                    #          }
+                                                    #},
+                                                    #{"$sort": SON([("_id", -1), ("avg", -1)])}
+                                            ]
+                                          )
+        print result
+
+
     def movies_rates_by_year(self):
-        result = self.collection.aggregate( [
+        result = self.collection.aggregate( [       
                                                     {"$group":{"_id":"$Year", 
                                                               "avg": {"$avg": "$rated"}
                                                               }
@@ -39,19 +59,6 @@ class MongoDBConnection():
             returnlist.append(movielist)
         print returnlist
         return returnlist
-
-    def movies_by_directors(self):
-        result = self.collection.aggregate( [
-                                                    {"$group":{"_id":"$Directors", 
-                                                              "count": {"$sum": 1}
-                                                              }
-                                                    },
-                                                    {"$sort": SON([("count", -1)])},
-                                                   ]
-                                                 )
-        #for i in result.get("result"):
-        #    print i.get("_id") +"-->"+ str(i.get("count"))
-        #print "-------------------"
 
     def top_directors_watched(self, top_number):
         result = self.collection.aggregate( [
@@ -106,11 +113,11 @@ class IMDB_Data():
     self.values = []
 
   def execute_aggregate_list(self):
-        print self.query
-        print self.collection
+        #print self.query
+        #print self.collection
         result = self.collection.aggregate( self.query )
-        print "INICIO"
-        print self.columns
+        #print "INICIO"
+        #print self.columns
         self.create_return(result, self.columns)
 
   
@@ -125,9 +132,11 @@ class IMDB_Data():
               movielist.append(str(i.get(key)))
             elif column_name.values()[0] == "int":
               movielist.append(int(i.get(key)))
-        print "=============="
+        #print "=============="
         
         self.values.append(movielist)
+
+        print self.values
     
         
 
@@ -146,7 +155,7 @@ class TopDirectorsRating(IMDBAggregation):
   def __init__(self, movie_collection):
      self.collection = movie_collection
      self.title = "Top Directors Rating"
-     self.query = [
+     self.query = [ #{"$userid" : "45031138"},{"$movies": 1},
                     {"$group":{"_id":"$Directors", 
                                "average": {"$avg": "$rated"},
                                "count": {"$sum": 1}
@@ -157,6 +166,7 @@ class TopDirectorsRating(IMDBAggregation):
                   ]
      self.columns = [{"_id" :"str"}, {"average" : "int"}]
      IMDBAggregation.__init__(self)
+
 
 class MoviesByYear(IMDBAggregation):
   def __init__(self, movie_collection):
