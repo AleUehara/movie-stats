@@ -49,9 +49,9 @@ class MongoDBConnection():
                                                     {"$sort": SON([("count", -1)])},
                                                    ]
                                                  )
-        for i in result.get("result"):
-            print i.get("_id") +"-->"+ str(i.get("count"))
-        print "-------------------"
+        #for i in result.get("result"):
+        #    print i.get("_id") +"-->"+ str(i.get("count"))
+        #print "-------------------"
 
     def top_directors_watched(self, top_number):
         result = self.collection.aggregate( [
@@ -106,6 +106,8 @@ class IMDB_Data():
     self.values = []
 
   def execute_aggregate_list(self):
+        print self.query
+        print self.collection
         result = self.collection.aggregate( self.query )
         print "INICIO"
         print self.columns
@@ -140,7 +142,7 @@ class IMDBAggregation(IMDB_Data):
 
 
 
-class DirectorsRating(IMDBAggregation):
+class TopDirectorsRating(IMDBAggregation):
   def __init__(self, movie_collection):
      self.collection = movie_collection
      self.title = "Top Directors Rating"
@@ -155,6 +157,22 @@ class DirectorsRating(IMDBAggregation):
                   ]
      self.columns = [{"_id" :"str"}, {"average" : "int"}]
      IMDBAggregation.__init__(self)
+
+class MoviesByYear(IMDBAggregation):
+  def __init__(self, movie_collection):
+     self.collection = movie_collection
+     self.title = "Movies By Year"
+     self.query =  [
+                    {"$group":{"_id":"$Year", 
+                              "count": {"$sum": 1}
+                              }
+                    },
+                    {"$sort": SON([("_id", -1), ("count", -1)])}
+                   ]
+     self.columns = [{"_id" :"str"}, {"count" : "int"}]
+     IMDBAggregation.__init__(self)
+
+
 
 
 
