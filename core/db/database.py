@@ -32,20 +32,26 @@ class MongoDBConnection():
         pass
 
     def test(self):
-        result = self.collection.aggregate( [       {"$match" : {"userid" : "45031138"}, "$match": {"movies" : 1}},
-                                                    #{"$match": {"movies" : 1}}
-                                                    #{"$group":{"_id":"$Year", 
-                                                    #          "avg": {"$avg": "$rated"}
-                                                    #          }
-                                                    #},
-                                                    #{"$sort": SON([("_id", -1), ("avg", -1)])}
-                                            ]
-                                          )
-        print result
+        result = self.collection.aggregate( [
+                                                { "$match": {"userid" : "45031138"} },
+                                                { "$unwind": '$movies' },
+                                                {"$group":{"_id":"$movies.Year", 
+                                                           "avg": {"$avg": "$movies.rated"}
+                                                          }
+                                                },
+                                                {"$sort": SON([("_id", -1), ("avg", -1)])}
+                                               ]
+                                        )
+        returnlist = []
+        for i in result.get("result"):
+            movielist = [i.get("_id"), i.get("avg")]
+            returnlist.append(movielist)
+        print returnlist
+        #print newresult
 
 
     def movies_rates_by_year(self):
-        result = self.collection.aggregate( [       
+        result = self.collection.aggregate( [
                                                     {"$group":{"_id":"$Year", 
                                                               "avg": {"$avg": "$rated"}
                                                               }
