@@ -131,6 +131,9 @@ class IMDB_Data():
 
   
   def create_return(self, result, columns_name):
+    self.__calculate_result(result, columns_name)
+
+  def __calculate_result(self, result, columns_name):
     for i in result.get("result"):
         movielist = []
         for column_name in columns_name:
@@ -146,7 +149,6 @@ class IMDB_Data():
         #print "=============="
         
         self.values.append(movielist)
-
     print self.values
     
         
@@ -180,11 +182,13 @@ class TopDirectorsRating(IMDBAggregation):
 
 
 class MoviesByYear(IMDBAggregation):
-  def __init__(self, movie_collection):
+  def __init__(self, movie_collection, imdbid):
      self.collection = movie_collection
      self.title = "Movies By Year"
      self.query =  [
-                    {"$group":{"_id":"$Year", 
+                    { "$match": {"userid" : imdbid} },
+                    { "$unwind": '$movies' },
+                    {"$group":{"_id":"$movies.Year", 
                               "count": {"$sum": 1}
                               }
                     },
@@ -198,26 +202,22 @@ class MoviesByYear(IMDBAggregation):
 
 
 class TotalMinutesWatched(IMDBAggregation):
-  def __init__(self, movie_collection):
+  def __init__(self, movie_collection, imdbid):
       self.collection = movie_collection
       self.title = "Total Minutes Watched"
       self.query = [
-                  {"$group":{"_id":"", 
-                             "sum_runtime": {"$sum": "$Runtime (mins)"}
-                            }
-                  }
-                 ]
+                      { "$match": {"userid" : imdbid} },
+                      { "$unwind": '$movies' },
+                      {"$group":{"_id":"", 
+                                 "sum_runtime": {"$sum": "$movies.Runtime (mins)"}
+                                 }
+                      }
+                   ]
       self.columns = [{"sum_runtime" : "int"}]
       IMDBAggregation.__init__(self)
 
-  def create_return(self, result, first_column_name, second_column_name=""):
-        #minutes_watched = result.get("result")[0].get("sum_runtime")
-        minutes_watched = result.get("result")[0].get(first_column_name)
-        print '--------------------------'
-        print minutes_watched
-        #return str(minutes_watched / 60) + " hours or " + str(minutes_watched) + " minutes"
-        return "teste"
-
+  def create_return(self, result, first_column_name):
+    self.values = [result.get("result")[0].get("sum_runtime") / 60]
 
 
 class MovieRateByYear(IMDBAggregation):

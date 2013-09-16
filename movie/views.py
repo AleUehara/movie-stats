@@ -24,15 +24,13 @@ def index(request):
         mongodb.insert_collection(imdbid, jsonfile)
         
         #directors_rating = TopDirectorsRating(mongodb.collection)
-        #movies_by_year   = MoviesByYear(mongodb.collection)
         movie_rate_by_year = MovieRateByYear(mongodb.collection, imdbid)
-
-        #print TotalMinutesWatched(mongodb.collection)
+        movies_by_year   = MoviesByYear(mongodb.collection, imdbid)
 
         #mongodb.drop_collection()
 
     #return render_to_response("charts/index.html", {'directors_rating' : directors_rating, "movies_by_year" : movies_by_year, "imdbid" : imdbid})
-    return render_to_response("charts/index.html", {'directors_rating' : movie_rate_by_year, "movies_by_year" : movie_rate_by_year, "imdbid" : imdbid})
+    return render_to_response("charts/index.html", {'movie_rate_by_year' : movie_rate_by_year, "movies_by_year" : movies_by_year, "imdbid" : imdbid})
 
 def connect_imdb(imdbid):
         imdbcsv = IMDB_CSV(imdbid)

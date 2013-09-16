@@ -9,7 +9,7 @@
       google.setOnLoadCallback(drawPieChart);
       function drawPieChart() {
         var data = google.visualization.arrayToDataTable(
-            {{ directors_rating.values|safe }}
+            {{ movie_rate_by_year.values|safe }}
           );
 
         // Set chart options
@@ -19,7 +19,7 @@
                         is3D: true,
                    };
 
-        var chart = new google.visualization.PieChart(document.getElementById('chart_directors_rating'));
+        var chart = new google.visualization.PieChart(document.getElementById('chart_movie_rate_by_year'));
         chart.draw(data, options);
       }
 
@@ -28,12 +28,12 @@
       function drawMouseoverVisualization() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Year');
-        data.addColumn('number', '{{ directors_rating.title }}');
-        data.addRows( {{ directors_rating.values|safe }} );
+        data.addColumn('number', '{{ movies_by_year.title }}');
+        data.addRows( {{ movies_by_year.values|safe }} );
         var options = {
                      'width':400,
                      'height':300};
-        barsVisualization = new google.visualization.ColumnChart(document.getElementById('mouseoverdiv'));
+        barsVisualization = new google.visualization.ColumnChart(document.getElementById('chart_movies_by_year'));
         barsVisualization.draw(data, options);
         google.visualization.events.addListener(barsVisualization, 'onmouseover', barMouseOver);
         google.visualization.events.addListener(barsVisualization, 'onmouseout', barMouseOut);
@@ -52,8 +52,8 @@
     <div id="imdb_id">YOUR ID: {{imdbid}}</div>
     <div class="row-fluid marketing">
       <div class="span6">
-        <h4>{{directors_rating.title}}</h4>
-        <p><div id="chart_directors_rating"></div></p>
+        <h4>{{movies_by_year.title}}</h4>
+        <p><div id="chart_movies_by_year"></div></p>
 
         <h4>{{movies_by_year.title}}</h4>
         <p>2Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
@@ -68,8 +68,8 @@
       </div>
 
       <div class="span6">
-        <h4>{{directors_rating.title}}</h4>
-        <p><div id="mouseoverdiv"></div></p>
+        <h4>{{movie_rate_by_year.title}}</h4>
+        <p><div id="chart_movie_rate_by_year"></div></p>
 
         <h4>Subheading</h4>
         <p>5Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
