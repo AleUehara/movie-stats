@@ -3,7 +3,7 @@
 import os
 os.path.dirname(os.path.abspath(__file__))
 from movieimdb.moviejson import IMDBMovieJson
-from db.database import MongoDBConnection, TopDirectorsRating
+from db.database import *#MongoDBConnection, TopDirectorsRating
 import ConfigParser
 from movieimdb.extract_csv import IMDB_CSV
 
@@ -37,7 +37,8 @@ def main():
     #mongodb.movies_rates_by_year()
     #mongodb.total_minutes_watched()
     #print TopDirectorsRating(mongodb.collection)
-    mongodb.movies_rates_by_year()
+    #mongodb.movies_rates_by_year()
+    MovieRateByYear(mongodb.collection, imdbid)
 
 
 #----------------------------------------

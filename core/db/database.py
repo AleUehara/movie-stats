@@ -43,6 +43,7 @@ class MongoDBConnection():
                                                ]
                                         )
         returnlist = []
+        print result
         for i in result.get("result"):
             movielist = [i.get("_id"), i.get("avg")]
             returnlist.append(movielist)
@@ -133,18 +134,20 @@ class IMDB_Data():
     for i in result.get("result"):
         movielist = []
         for column_name in columns_name:
-            print column_name
+            #print column_name
           
             key = column_name.keys()[0]
             if column_name.values()[0] == "str":
               movielist.append(str(i.get(key)))
             elif column_name.values()[0] == "int":
               movielist.append(int(i.get(key)))
+            elif column_name.values()[0] == "float":
+              movielist.append(round(float(i.get(key)),2))
         #print "=============="
         
         self.values.append(movielist)
 
-        print self.values
+    print self.values
     
         
 
@@ -215,12 +218,14 @@ class TotalMinutesWatched(IMDBAggregation):
         #return str(minutes_watched / 60) + " hours or " + str(minutes_watched) + " minutes"
         return "teste"
 
+
+
 class MovieRateByYear(IMDBAggregation):
-  def __init__(self, movie_collection):
+  def __init__(self, movie_collection, imdbid):
       self.collection = movie_collection
       self.title = "Movie Rate By Year"
       self.query = [
-                      { "$match": {"userid" : "45031138"} },
+                      { "$match": {"userid" : imdbid} },
                       { "$unwind": '$movies' },
                       {"$group":{"_id":"$movies.Year", 
                                  "avg": {"$avg": "$movies.rated"}
@@ -228,7 +233,7 @@ class MovieRateByYear(IMDBAggregation):
                       },
                       {"$sort": SON([("_id", -1), ("avg", -1)])}
                     ]
-      self.columns = [{"sum_runtime" : "int"}]
+      self.columns = [{"_id" :"str"}, {"avg" :"float"}]
       IMDBAggregation.__init__(self)
 
 #----------------------------------------
