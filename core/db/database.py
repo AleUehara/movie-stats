@@ -31,7 +31,7 @@ class MongoDBConnection():
     def all_rates(self):
         pass
 
-    def test(self):
+    def movies_rates_by_year(self):
         result = self.collection.aggregate( [
                                                 { "$match": {"userid" : "45031138"} },
                                                 { "$unwind": '$movies' },
@@ -50,6 +50,7 @@ class MongoDBConnection():
         #print newresult
 
 
+    '''
     def movies_rates_by_year(self):
         result = self.collection.aggregate( [
                                                     {"$group":{"_id":"$Year", 
@@ -65,6 +66,7 @@ class MongoDBConnection():
             returnlist.append(movielist)
         print returnlist
         return returnlist
+    '''
 
     def top_directors_watched(self, top_number):
         result = self.collection.aggregate( [
@@ -212,6 +214,22 @@ class TotalMinutesWatched(IMDBAggregation):
         print minutes_watched
         #return str(minutes_watched / 60) + " hours or " + str(minutes_watched) + " minutes"
         return "teste"
+
+class MovieRateByYear(IMDBAggregation):
+  def __init__(self, movie_collection):
+      self.collection = movie_collection
+      self.title = "Movie Rate By Year"
+      self.query = [
+                      { "$match": {"userid" : "45031138"} },
+                      { "$unwind": '$movies' },
+                      {"$group":{"_id":"$movies.Year", 
+                                 "avg": {"$avg": "$movies.rated"}
+                                }
+                      },
+                      {"$sort": SON([("_id", -1), ("avg", -1)])}
+                    ]
+      self.columns = [{"sum_runtime" : "int"}]
+      IMDBAggregation.__init__(self)
 
 #----------------------------------------
 #Init

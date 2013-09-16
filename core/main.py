@@ -37,7 +37,7 @@ def main():
     #mongodb.movies_rates_by_year()
     #mongodb.total_minutes_watched()
     #print TopDirectorsRating(mongodb.collection)
-    mongodb.test()
+    mongodb.movies_rates_by_year()
 
 
 #----------------------------------------
