@@ -6,6 +6,7 @@
     <script type="text/javascript">
       google.load('visualization', '1.0', {'packages':['corechart']});
 
+      //chart 1
       google.setOnLoadCallback(drawPieChart);
       function drawPieChart() {
         var data = google.visualization.arrayToDataTable(
@@ -23,6 +24,8 @@
         chart.draw(data, options);
       }
 
+      
+      //chart 2
       google.setOnLoadCallback(drawMouseoverVisualization);
       var barsVisualization;
       function drawMouseoverVisualization() {
@@ -44,7 +47,8 @@
       function barMouseOut(e) {
         barsVisualization.setSelection([{'row': null, 'column': null}]);
       }
-    </script>
+
+      </script>
 {% endblock %}
 
 {% block content %}
