@@ -38,7 +38,9 @@ def main():
     #mongodb.total_minutes_watched()
     #TotalMinutesWatched(mongodb.collection, imdbid)
     #MovieRateByYear(mongodb.collection, imdbid)
-    MoviesByYear(mongodb.collection, imdbid)
+    #MoviesByYear(mongodb.collection, imdbid)
+    #TopDirectorsRating(mongodb.collection, imdbid)
+    TopDirectorsWatched(mongodb.collection, imdbid)
 
 
 #----------------------------------------

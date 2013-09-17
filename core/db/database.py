@@ -165,20 +165,49 @@ class IMDBAggregation(IMDB_Data):
 
 
 class TopDirectorsRating(IMDBAggregation):
-  def __init__(self, movie_collection):
+  def __init__(self, movie_collection, imdbid):
      self.collection = movie_collection
-     self.title = "Top Directors Rating"
-     self.query = [ #{"$userid" : "45031138"},{"$movies": 1},
-                    {"$group":{"_id":"$Directors", 
-                               "average": {"$avg": "$rated"},
+     self.title = "Top 5 Directors Rating"
+     self.query =  [
+                    { "$match": {"userid" : imdbid} },
+                    { "$unwind": '$movies' },
+                    {"$group":{"_id":"$movies.Directors", 
+                               "average": {"$avg": "$movies.rated"},
                                "count": {"$sum": 1}
                               }
                     },
                     {"$sort": SON([("average", -1), ("_id", -1)])},
-                    {"$limit" : 5}
+                    {"$limit" : 10}
                   ]
      self.columns = [{"_id" :"str"}, {"average" : "int"}]
      IMDBAggregation.__init__(self)
+  
+  def create_return(self, result, first_column_name):
+    self.values.append(['Director', 'Number of Movies', 'Average'])
+    for director in result.get('result'):
+      newvalue = [director.get("_id").encode("utf-8"), director.get("count"), int(director.get("average"))]
+      self.values.append(newvalue)
+    #self.values = result.get("result")[0].get("sum_runtime") / 60
+
+
+class TopDirectorsWatched(IMDBAggregation):
+  def __init__(self, movie_collection, imdbid):
+     self.collection = movie_collection
+     self.title = "Top 10 Directors Watched"
+     self.query =  [
+                    { "$match": {"userid" : imdbid} },
+                    { "$unwind": '$movies' },
+                    {"$group":{"_id":"$movies.Directors", 
+                              "count": {"$sum": 1}
+                              }
+                    },
+                    {"$sort": SON([("count", -1)])},
+                    {"$limit" : 10}
+                  ]
+     self.columns = [{"_id" :"str"}, {"count" : "int"}]
+     IMDBAggregation.__init__(self)
+
+
 
 
 class MoviesByYear(IMDBAggregation):
@@ -217,7 +246,8 @@ class TotalMinutesWatched(IMDBAggregation):
       IMDBAggregation.__init__(self)
 
   def create_return(self, result, first_column_name):
-    self.values = [result.get("result")[0].get("sum_runtime") / 60]
+    self.values = result.get("result")[0].get("sum_runtime") / 60
+    #print self.values 
 
 
 class MovieRateByYear(IMDBAggregation):

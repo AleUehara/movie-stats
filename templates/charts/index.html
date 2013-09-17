@@ -6,25 +6,6 @@
     <script type="text/javascript">
       google.load('visualization', '1.0', {'packages':['corechart']});
 
-      //chart 1
-      google.setOnLoadCallback(drawPieChart);
-      function drawPieChart() {
-        var data = google.visualization.arrayToDataTable(
-            {{ movie_rate_by_year.values|safe }}
-          );
-
-        // Set chart options
-        var options = {
-                       'width':400,
-                       'height':300,
-                        is3D: true,
-                   };
-
-        var chart = new google.visualization.PieChart(document.getElementById('chart_movie_rate_by_year'));
-        chart.draw(data, options);
-      }
-
-      
       //chart 2
       google.setOnLoadCallback(drawMouseoverVisualization);
       var barsVisualization;
@@ -40,12 +21,54 @@
         barsVisualization.draw(data, options);
         google.visualization.events.addListener(barsVisualization, 'onmouseover', barMouseOver);
         google.visualization.events.addListener(barsVisualization, 'onmouseout', barMouseOut);
+
+
+        var data1 = new google.visualization.DataTable();
+        data1.addColumn('string', 'Year');
+        data1.addColumn('number', '{{ movie_rate_by_year.title }}');
+        data1.addRows( {{ movie_rate_by_year.values|safe }} );
+        var options1 = {
+                     'width':400,
+                     'height':300};
+        barsVisualization1 = new google.visualization.ColumnChart(document.getElementById('chart_movie_rate_by_year'));
+        barsVisualization1.draw(data1, options1);
+        google.visualization.events.addListener(barsVisualization1, 'onmouseover', barMouseOver);
+        google.visualization.events.addListener(barsVisualization1, 'onmouseout', barMouseOut);
+
       }
+
+
+
       function barMouseOver(e) {
         barsVisualization.setSelection([e]);
       }
       function barMouseOut(e) {
         barsVisualization.setSelection([{'row': null, 'column': null}]);
+      }
+
+
+
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(
+          {{top_directors_rating.values | safe}}
+        );
+        var options = {
+          vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
+        };
+        var chart = new google.visualization.BarChart(document.getElementById('chart_top_directors_rating'));
+        chart.draw(data, options);
+
+
+        var data1 = google.visualization.arrayToDataTable(
+          {{top_directors_watched.values | safe}}
+        );
+        var options1 = {
+          vAxis: {title: 'Director',  titleTextStyle: {color: 'red'}}
+        };
+        var chart1 = new google.visualization.BarChart(document.getElementById('chart_top_directors_watched'));
+        chart1.draw(data1, options1);
+
       }
 
       </script>
@@ -59,27 +82,20 @@
         <h4>{{movies_by_year.title}}</h4>
         <p><div id="chart_movies_by_year"></div></p>
 
-        <h4>{{movies_by_year.title}}</h4>
-        <p>2Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+        <h4>{{total_minutes_watched.title}}</h4>
+        <p>{{total_minutes_watched.values}} minutes</p>
 
+        <h4>{{top_directors_watched.title}}</h4>
+        <p><div id="chart_top_directors_watched"></div></p>
 
-
-
-
-
-        <h4>Subheading</h4>
-        <p>3Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
       </div>
 
       <div class="span6">
         <h4>{{movie_rate_by_year.title}}</h4>
         <p><div id="chart_movie_rate_by_year"></div></p>
 
-        <h4>Subheading</h4>
-        <p>5Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-        <h4>Subheading</h4>
-        <p>6Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        <h4>{{ top_directors_rating.title }}</h4>
+        <p><div id="chart_top_directors_rating"></div></p>
       </div>
     </div>
 
