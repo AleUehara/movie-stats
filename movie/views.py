@@ -40,6 +40,11 @@ def index(request):
                                                     "top_directors_watched" : top_directors_watched,
                                                     "imdbid" : imdbid})
 
+def information(request):
+    print "okookokdsa"
+    return render_to_response("emailform.html")
+    #return HttpResponse("Hello, world. You're at the polls index.")
+
 def connect_imdb(imdbid):
         imdbcsv = IMDB_CSV(imdbid)
         return IMDBMovieJson(imdbcsv.csvfilename).convert_csv_to_json()
