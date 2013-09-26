@@ -32,13 +32,26 @@ def index(request):
         mongodb.insert_collection(imdbid, jsonfile)
         
         #directors_rating = TopDirectorsRating(mongodb.collection)
-        movie_rate_by_year = MovieRateByYear(mongodb.collection, imdbid)
-        movies_by_year   = MoviesByYear(mongodb.collection, imdbid)
+        movie_rate_by_year    = MovieRateByYear(mongodb.collection, imdbid)
+        movies_by_year        = MoviesByYear(mongodb.collection, imdbid)
+        total_minutes_watched = TotalMinutesWatched(mongodb.collection, imdbid)
+        top_directors_rating  = TopDirectorsRating(mongodb.collection, imdbid)
+        top_directors_watched = TopDirectorsWatched(mongodb.collection, imdbid)
 
         #mongodb.drop_collection()
 
     #return render_to_response("charts/index.html", {'directors_rating' : directors_rating, "movies_by_year" : movies_by_year, "imdbid" : imdbid})
-    return render_to_response("charts/index.html", {'movie_rate_by_year' : movie_rate_by_year, "movies_by_year" : movies_by_year, "imdbid" : imdbid})
+    return render_to_response("charts/index.html", {'movie_rate_by_year' : movie_rate_by_year, 
+                                                    "movies_by_year" : movies_by_year, 
+                                                    "total_minutes_watched" : total_minutes_watched,
+                                                    "top_directors_rating" : top_directors_rating,
+                                                    "top_directors_watched" : top_directors_watched,
+                                                    "imdbid" : imdbid})
+
+def information(request):
+    print "okookokdsa"
+    return render_to_response("emailform.html")
+    #return HttpResponse("Hello, world. You're at the polls index.")
 
 def connect_imdb(imdbid):
         imdbcsv = IMDB_CSV(imdbid)
