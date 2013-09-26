@@ -43,11 +43,11 @@ class MongoDBConnection():
                                                ]
                                         )
         returnlist = []
-        print result
+        #print result
         for i in result.get("result"):
             movielist = [i.get("_id"), i.get("avg")]
             returnlist.append(movielist)
-        print returnlist
+        #print returnlist
         #print newresult
 
 
@@ -122,11 +122,7 @@ class IMDB_Data():
     self.values = []
 
   def execute_aggregate_list(self):
-        #print self.query
-        #print self.collection
         result = self.collection.aggregate( self.query )
-        #print "INICIO"
-        #print self.columns
         self.create_return(result, self.columns)
 
   
@@ -137,7 +133,6 @@ class IMDB_Data():
     for i in result.get("result"):
         movielist = []
         for column_name in columns_name:
-            #print column_name
           
             key = column_name.keys()[0]
             if column_name.values()[0] == "str":
@@ -146,10 +141,8 @@ class IMDB_Data():
               movielist.append(int(i.get(key)))
             elif column_name.values()[0] == "float":
               movielist.append(round(float(i.get(key)),2))
-        #print "=============="
         
         self.values.append(movielist)
-    print self.values
     
         
 
@@ -247,7 +240,6 @@ class TotalMinutesWatched(IMDBAggregation):
 
   def create_return(self, result, first_column_name):
     self.values = result.get("result")[0].get("sum_runtime") / 60
-    #print self.values 
 
 
 class MovieRateByYear(IMDBAggregation):

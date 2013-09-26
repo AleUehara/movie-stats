@@ -15,9 +15,12 @@ class IMDBMovieJson():
         reader = csv.DictReader( self.file, fieldnames = ( header.replace("\"", "").split(",") ) )
 
         movie_list = []
+        username = ""
 
         for row in reader:
-           row["rated"] = int(row["uehara-alexandre rated"])
+           username = self.__find_username(row)
+
+           row["rated"] = int(row[username])
            row["IMDb Rating"] = float(row["IMDb Rating"])
            row["Runtime (mins)"] = 0 if row["Runtime (mins)"] is "" else int(row["Runtime (mins)"])
            movie_list.append(row)
@@ -28,6 +31,12 @@ class IMDBMovieJson():
 
         os.remove(self.filename)
         return movies_json
+
+    def __find_username(self, row):
+        for key in row.keys():
+          if key.endswith(" rated"):
+            return key
+        return ""
 
 #----------------------------------------
 #Init
