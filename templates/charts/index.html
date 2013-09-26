@@ -50,8 +50,9 @@
 
       google.setOnLoadCallback(drawChart);
       function drawChart() {
+        
         var data = google.visualization.arrayToDataTable(
-          {{top_directors_rating.values | safe}}
+          {{top_directors_rating.values|safe}}
         );
         var options = {
           vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
@@ -61,7 +62,7 @@
 
 
         var data1 = google.visualization.arrayToDataTable(
-          {{top_directors_watched.values | safe}}
+          {{top_directors_watched.values|safe}}
         );
         var options1 = {
           vAxis: {title: 'Director',  titleTextStyle: {color: 'red'}}
@@ -100,3 +101,4 @@
     </div>
 
 {% endblock %}
+                                                                                                                                                                                                   102,1         Bot
