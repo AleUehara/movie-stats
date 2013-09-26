@@ -1,19 +1,27 @@
 install
 =======
-apt-get install python-setuptools
-apt-get install git-core
-apt-get install build-essential
-apt-get update
-apt-get install libxml2
-apt-get install python-dev
-apt-get install libxml2-dev libxslt1-dev
-easy_install pip
-pip install django
-pip install IMDbPY
-pip install pymongo
+
+sudo apt-get install python-setuptools
+sudo apt-get install git-core
+sudo apt-get install build-essential
+sudo apt-get update
+sudo apt-get install libxml2
+sudo apt-get install python-dev
+sudo apt-get install libxml2-dev libxslt1-dev
+sudo easy_install pip
+sudo pip install django
+sudo pip install IMDbPY
+sudo pip install pymongo
 
 mongodb 2.4.6
+sudo wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.4.6.tgz
+sudo mkdir /data/db
+
+sudo ./mongod --port 27021
+./manage.py runserver ec2-177-71-231-225.sa-east-1.compute.amazonaws.com:8000
 
 configure
 imdb/imdb.cfg
 id number of your imdb
+
+
