@@ -16,11 +16,19 @@ def index(request):
         try:
             imdbid = request.POST.getlist("your_IMDB_ID")[0]
             jsonfile = connect_imdb(imdbid)
+        except Exception, e:
+            #print "---------------------"
+            #print e
+            return render_to_response("404.html", {'message' : "Data not available for this user"})
+
+
+        try:
+            mongodb = MongoDBConnection()
         except:
-            render_to_response("404.html")
+            return render_to_response("404.html", {'message' : "Database is out of service"})
 
+        
 
-        mongodb = MongoDBConnection()
         mongodb.insert_collection(imdbid, jsonfile)
         
         #directors_rating = TopDirectorsRating(mongodb.collection)

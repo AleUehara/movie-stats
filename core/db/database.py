@@ -5,7 +5,7 @@ from bson.code import Code
 
 class MongoDBConnection():
     def __init__(self):
-        client = MongoClient('localhost', 27021)
+        client = MongoClient('localhost', 27021, safe = True)
         self.db = client.movies
         self.collection = self.db.movie_collection
 
