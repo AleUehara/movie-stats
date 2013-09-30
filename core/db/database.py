@@ -226,7 +226,7 @@ class MoviesByYear(IMDBAggregation):
 class TotalMinutesWatched(IMDBAggregation):
   def __init__(self, movie_collection, imdbid):
       self.collection = movie_collection
-      self.title = "Total Minutes Watched"
+      self.title = "Total Time Watched"
       self.query = [
                       { "$match": {"userid" : imdbid} },
                       { "$unwind": '$movies' },
