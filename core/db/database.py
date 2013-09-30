@@ -160,7 +160,7 @@ class IMDBAggregation(IMDB_Data):
 class TopDirectorsRating(IMDBAggregation):
   def __init__(self, movie_collection, imdbid):
      self.collection = movie_collection
-     self.title = "Top 5 Directors Rating"
+     self.title = "Top 5 Directors Rating (more than 3 movies watched)"
      self.query =  [
                     { "$match": {"userid" : imdbid} },
                     { "$unwind": '$movies' },
@@ -169,6 +169,7 @@ class TopDirectorsRating(IMDBAggregation):
                                "count": {"$sum": 1}
                               }
                     },
+                    { "$match": { "count": { "$gt": 3 } } },
                     {"$sort": SON([("average", -1), ("_id", -1)])},
                     {"$limit" : 10}
                   ]
@@ -178,7 +179,7 @@ class TopDirectorsRating(IMDBAggregation):
   def create_return(self, result, first_column_name):
     self.values.append(['Director', 'Number of Movies', 'Average'])
     for director in result.get('result'):
-      newvalue = [director.get("_id").encode("utf-8"), director.get("count"), int(director.get("average"))]
+      newvalue = [director.get("_id").encode("utf-8"), director.get("count"), round(float(director.get("average")),2) ]
       self.values.append(newvalue)
     #self.values = result.get("result")[0].get("sum_runtime") / 60
 
