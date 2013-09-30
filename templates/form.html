@@ -28,10 +28,15 @@
 {% endblock %}
 
 {% block content %}
-	<form action="/charts" method="post">{% csrf_token %}
+<!--<img src='static/img/loading.gif' alt='loading' />-->
+	<form action="/charts" method="post" id="submitform">{% csrf_token %}
 		{{ form.as_p }}
-		<input type="submit" value="Submit" />
+		<input type="submit" value="Submit"/>
 	</form>
+  <div id="loading" style="visibility: hidden">
+    <img src='static/img/loading.gif' alt='loading' />
+    <br /> Loading...
+  </div>
 
 <script>
 $(document).ready(function () {
@@ -40,6 +45,12 @@ $(document).ready(function () {
     controlsContainer: '.flexslider'
   });
 });
+
+$('#submitform').submit(function() {
+      $("#loading").css('visibility', 'visible');
+      
+    });
+
 </script>
 
 {% endblock %}

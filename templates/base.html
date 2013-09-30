@@ -41,7 +41,7 @@
       }
       .jumbotron h1 {
         font-size: 72px;
-        line-height: 1;
+        line-height: 0;
       }
       .jumbotron .btn {
         font-size: 21px;
@@ -67,9 +67,7 @@
   </head>
 
   <body>
-
     <div class="container-narrow">
-
     <div class="masthead">
       <ul class="nav nav-pills pull-right">
         <li><a href="/" class="active">Home</a></li>
@@ -79,10 +77,9 @@
       <h3 class="muted">MovieStatz</h3>
     </div>
     <hr>
-
       <div class="jumbotron">
         <h1>MovieStatz - IMDb</h1>
-        
+        <br />
         {% block banner %}{% endblock %}
         <br />
         <br />
