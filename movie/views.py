@@ -35,6 +35,8 @@ def index(request):
         total_minutes_watched = TotalMinutesWatched(mongodb.collection, imdbid)
         top_directors_rating  = TopDirectorsRating(mongodb.collection, imdbid)
         top_directors_watched = TopDirectorsWatched(mongodb.collection, imdbid)
+        movies_by_genres      = MoviesByGenres(mongodb.collection, imdbid)
+        print movies_by_genres.values
 
         #mongodb.drop_collection()
 
@@ -43,6 +45,7 @@ def index(request):
                                                     "total_minutes_watched" : total_minutes_watched,
                                                     "top_directors_rating" : top_directors_rating,
                                                     "top_directors_watched" : top_directors_watched,
+                                                    "movies_by_genres" : movies_by_genres,
                                                     "imdbid" : imdbid})
 
 def information(request):

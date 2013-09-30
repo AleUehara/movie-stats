@@ -72,6 +72,21 @@
 
       }
 
+      google.setOnLoadCallback(drawPieChart);
+      function drawPieChart() {
+        var data = google.visualization.arrayToDataTable(
+          {{movies_by_genres.values|safe}}
+          );
+
+        var options = {
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart_movies_by_genres'));
+        chart.draw(data, options);
+      }
+
+
       </script>
 {% endblock %}
 
@@ -97,6 +112,9 @@
 
         <h4>{{ top_directors_rating.title }}</h4>
         <p><div id="chart_top_directors_rating"></div></p>
+
+        <h4>{{ movies_by_genres.title }}</h4>
+        <p><div id="chart_movies_by_genres"></div></p>
       </div>
     </div>
 

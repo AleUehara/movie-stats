@@ -220,7 +220,37 @@ class MoviesByYear(IMDBAggregation):
      self.columns = [{"_id" :"str"}, {"count" : "int"}]
      IMDBAggregation.__init__(self)
 
+class MoviesByGenres(IMDBAggregation):
+  def __init__(self, movie_collection, imdbid):
+     self.collection = movie_collection
+     self.title = "Movies By Genres"
+     self.query =  [
+                    { "$match": {"userid" : imdbid} },
+                    { "$unwind": '$movies' },
+                    {"$group":{"_id":"$movies.Genres", 
+                              "count": {"$sum": 1}
+                              }
+                    },
+                    {"$sort": SON([("count", -1)])}
+                   ]
+     self.columns = [{"_id" :"str"}, {"count" : "int"}]
+     IMDBAggregation.__init__(self)
 
+  def create_return(self, result, first_column_name):
+    #self.values.append(['Director', 'Number of Movies', 'Average'])
+    movies_genres = {}
+
+
+    for movies in result.get('result'):
+      for genre in movies.get("_id").split(","):
+        genre_name = genre.strip()
+        if  movies_genres.has_key(genre_name):
+          movies_genres[genre.strip()] += 1
+        else:
+          movies_genres[genre.strip()] = 1
+
+    for key, value in movies_genres.items():
+      self.values.append([key.encode("utf-8"), value])
 
 
 

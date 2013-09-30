@@ -14,7 +14,7 @@ def main():
     CFG_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), "movieimdb", "imdb.cfg")
     config.read(CFG_FILE)
     imdbid = config.get("imdb", "id")
-    imdbcsv = IMDB_CSV(imdbid)
+    #imdbcsv = IMDB_CSV(imdbid)
 
     #print imdbcsv.csvfilename
 
@@ -24,9 +24,9 @@ def main():
 
 
 
-    jsonfile = IMDBMovieJson(imdbcsv.csvfilename).convert_csv_to_json()
+    #jsonfile = IMDBMovieJson(imdbcsv.csvfilename).convert_csv_to_json()
     #print jsonfile
-    #mongodb = MongoDBConnection()
+    mongodb = MongoDBConnection()
     #mongodb.insert_collection(imdbid, jsonfile)
     #mongodb.select_all()
     #mongodb.select_one()
@@ -38,11 +38,14 @@ def main():
     #mongodb.directors_rating()
     #mongodb.movies_rates_by_year()
     #mongodb.total_minutes_watched()
-    #TotalMinutesWatched(mongodb.collection, imdbid)
+    #result = TotalMinutesWatched(mongodb.collection, imdbid)
     #MovieRateByYear(mongodb.collection, imdbid)
-    #MoviesByYear(mongodb.collection, imdbid)
-    #TopDirectorsRating(mongodb.collection, imdbid)
+    result = MoviesByYear(mongodb.collection, imdbid)
+    print result.values
+    #result = TopDirectorsRating(mongodb.collection, imdbid)
+    result = MoviesByGenres(mongodb.collection, imdbid)
     #TopDirectorsWatched(mongodb.collection, imdbid)
+    print result.values
 
 
 #----------------------------------------
