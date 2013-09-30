@@ -25,3 +25,4 @@ imdb/imdb.cfg
 id number of your imdb
 
 
+sudo python ./manage.py runserver 0.0.0.0:80 &
