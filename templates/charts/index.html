@@ -7,9 +7,9 @@
       google.load('visualization', '1.0', {'packages':['corechart']});
 
       //chart 2
-      google.setOnLoadCallback(drawMouseoverVisualization);
+      google.setOnLoadCallback(drawBarChart);
       var barsVisualization;
-      function drawMouseoverVisualization() {
+      function drawBarChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Year');
         data.addColumn('number', '{{ movies_by_year.title }}');
@@ -29,7 +29,8 @@
         data1.addRows( {{ movie_rate_by_year.values|safe }} );
         var options1 = {
                      'width':400,
-                     'height':300};
+                     'height':300,
+                     'colors': ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6']};
         barsVisualization1 = new google.visualization.ColumnChart(document.getElementById('chart_movie_rate_by_year'));
         barsVisualization1.draw(data1, options1);
         google.visualization.events.addListener(barsVisualization1, 'onmouseover', barMouseOver);

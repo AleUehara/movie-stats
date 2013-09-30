@@ -31,90 +31,6 @@ class MongoDBConnection():
     def all_rates(self):
         pass
 
-    def movies_rates_by_year(self):
-        result = self.collection.aggregate( [
-                                                { "$match": {"userid" : "45031138"} },
-                                                { "$unwind": '$movies' },
-                                                {"$group":{"_id":"$movies.Year", 
-                                                           "avg": {"$avg": "$movies.rated"}
-                                                          }
-                                                },
-                                                {"$sort": SON([("_id", -1), ("avg", -1)])}
-                                               ]
-                                        )
-        returnlist = []
-        #print result
-        for i in result.get("result"):
-            movielist = [i.get("_id"), i.get("avg")]
-            returnlist.append(movielist)
-        #print returnlist
-        #print newresult
-
-
-    '''
-    def movies_rates_by_year(self):
-        result = self.collection.aggregate( [
-                                                    {"$group":{"_id":"$Year", 
-                                                              "avg": {"$avg": "$rated"}
-                                                              }
-                                                    },
-                                                    {"$sort": SON([("_id", -1), ("avg", -1)])}
-                                                   ]
-                                                 )
-        returnlist = []
-        for i in result.get("result"):
-            movielist = [i.get("_id"), i.get("avg")]
-            returnlist.append(movielist)
-        print returnlist
-        return returnlist
-    '''
-
-    def top_directors_watched(self, top_number):
-        result = self.collection.aggregate( [
-                                                    {"$group":{"_id":"$Directors", 
-                                                              "count": {"$sum": 1}
-                                                              }
-                                                    },
-                                                    {"$sort": SON([("count", -1)])},
-                                                    {"$limit" : top_number}
-                                                   ]
-                                                 )
-        #for i in result.get("result"):
-        #    print i.get("_id") +"-->"+ str(i.get("count"))
-
-        returnlist = []
-        for i in result.get("result"):
-            movielist = [str(i.get("_id")), i.get("count")]
-            returnlist.append(movielist)
-        return returnlist
-
-
-
-    def movies_by_year(self):
-        for i in aggregation.get("result"):
-            print str(i.get("total")) +"-->"+ i.get("_id")
-
-
-        result1 = self.collection.aggregate( [
-                                                    {"$group":{"_id":"$Year", 
-                                                              "count": {"$sum": 1}
-                                                              }
-                                                    },
-                                                    {"$sort": SON([("_id", -1), ("count", -1)])}
-                                                   ]
-                                                 )
-        for i in result1.get("result"):
-            print i.get("_id") +"-->"+ str(i.get("count"))
-
-
-
-
-
-
-
-
-
-
 
 
 class IMDB_Data():
@@ -181,7 +97,6 @@ class TopDirectorsRating(IMDBAggregation):
     for director in result.get('result'):
       newvalue = [director.get("_id").encode("utf-8"), director.get("count"), round(float(director.get("average")),2) ]
       self.values.append(newvalue)
-    #self.values = result.get("result")[0].get("sum_runtime") / 60
 
 
 class TopDirectorsWatched(IMDBAggregation):
@@ -237,10 +152,7 @@ class MoviesByGenres(IMDBAggregation):
      IMDBAggregation.__init__(self)
 
   def create_return(self, result, first_column_name):
-    #self.values.append(['Director', 'Number of Movies', 'Average'])
     movies_genres = {}
-
-
     for movies in result.get('result'):
       for genre in movies.get("_id").split(","):
         genre_name = genre.strip()
