@@ -1,8 +1,45 @@
 {% extends "base.html" %}
 
+{% block head %}
+  <link rel="stylesheet" href="static/css/slider.css" type="text/css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+  <script src="static/js/jquery.flexslider-min.js"></script>
+{% endblock %}
+
+
+{% block banner %}
+<div class="flex-container">
+  <div class="flexslider">
+    <ul class="slides">
+      <li>
+        <a href="#"><img src="static/img/slide1.jpg" /></a>
+      </li>
+      
+      <li>
+        <img src="static/img/slide2.jpg" />
+      </li>
+      
+      <li>
+        <img src="static/img/slide3.jpg" />
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
+
 {% block content %}
-<form action="/charts" method="post">{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Submit" />
-</form>
+	<form action="/charts" method="post">{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Submit" />
+	</form>
+
+<script>
+$(document).ready(function () {
+  $('.flexslider').flexslider({
+    animation: 'fade',
+    controlsContainer: '.flexslider'
+  });
+});
+</script>
+
 {% endblock %}

@@ -70,19 +70,23 @@
 
     <div class="container-narrow">
 
-      <div class="masthead">
-        <ul class="nav nav-pills pull-right">
-          <li><a href="/" class="active">Home</a></li>
-          <li><a href="information">More Information</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <h3 class="muted">MovieStatz</h3>
-      </div>
-
-      <hr>
+    <div class="masthead">
+      <ul class="nav nav-pills pull-right">
+        <li><a href="/" class="active">Home</a></li>
+        <li><a href="information">More Information</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <h3 class="muted">MovieStatz</h3>
+    </div>
+    <hr>
 
       <div class="jumbotron">
         <h1>MovieStatz - IMDb</h1>
+        
+        {% block banner %}{% endblock %}
+        <br />
+        <br />
+
         <p class="lead">Your statistics based on movies that you watched. 
           <br />Example of IMDb ID: 45031138</p>
         <!--<a class="btn btn-large btn-success" href="#">Sign up today</a>-->
