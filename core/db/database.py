@@ -239,7 +239,9 @@ class TotalMinutesWatched(IMDBAggregation):
       IMDBAggregation.__init__(self)
 
   def create_return(self, result, first_column_name):
-    self.values = result.get("result")[0].get("sum_runtime") / 60
+    total_hours = result.get("result")[0].get("sum_runtime") / 60
+    total_days = total_hours / 24
+    self.values =  str(total_hours) + " hours, or " + str(total_days) + " days."
 
 
 class MovieRateByYear(IMDBAggregation):
