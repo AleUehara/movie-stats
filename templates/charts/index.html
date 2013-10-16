@@ -53,13 +53,23 @@
       function drawChart() {
         
         var data = google.visualization.arrayToDataTable(
-          {{top_directors_rating.values|safe}}
+          {{top_directors_best_rating.values|safe}}
         );
         var options = {
           vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
         };
-        var chart = new google.visualization.BarChart(document.getElementById('chart_top_directors_rating'));
+        var chart = new google.visualization.BarChart(document.getElementById('chart_top_directors_best_rating'));
         chart.draw(data, options);
+
+
+        var data0 = google.visualization.arrayToDataTable(
+          {{top_directors_worse_rating.values|safe}}
+        );
+        var options0 = {
+          vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
+        };
+        var chart = new google.visualization.BarChart(document.getElementById('chart_top_directors_worse_rating'));
+        chart.draw(data0, options0);
 
 
         var data1 = google.visualization.arrayToDataTable(
@@ -105,17 +115,21 @@
         <h4>{{top_directors_watched.title}}</h4>
         <p><div id="chart_top_directors_watched"></div></p>
 
+        <h4>{{ movies_by_genres.title }}</h4>
+        <p><div id="chart_movies_by_genres"></div></p>
+
       </div>
 
       <div class="span6">
         <h4>{{movie_rate_by_year.title}}</h4>
         <p><div id="chart_movie_rate_by_year"></div></p>
 
-        <h4>{{ top_directors_rating.title }}</h4>
-        <p><div id="chart_top_directors_rating"></div></p>
+        <h4>{{ top_directors_best_rating.title }}</h4>
+        <p><div id="chart_top_directors_best_rating"></div></p>
 
-        <h4>{{ movies_by_genres.title }}</h4>
-        <p><div id="chart_movies_by_genres"></div></p>
+        <h4>{{ top_directors_worse_rating.title }}</h4>
+        <p><div id="chart_top_directors_worse_rating"></div></p>
+
       </div>
     </div>
 

@@ -73,10 +73,10 @@ class IMDBAggregation(IMDB_Data):
 
 
 
-class TopDirectorsRating(IMDBAggregation):
+class TopDirectorsBestRating(IMDBAggregation):
   def __init__(self, movie_collection, imdbid):
      self.collection = movie_collection
-     self.title = "Top 5 Directors Rating (more than 3 movies watched)"
+     self.title = "Top 5 Directors Best Rating (more than 3 movies watched)"
      self.query =  [
                     { "$match": {"userid" : imdbid} },
                     { "$unwind": '$movies' },
@@ -87,6 +87,31 @@ class TopDirectorsRating(IMDBAggregation):
                     },
                     { "$match": { "count": { "$gt": 3 } } },
                     {"$sort": SON([("average", -1), ("_id", -1)])},
+                    {"$limit" : 10}
+                  ]
+     self.columns = [{"_id" :"str"}, {"average" : "int"}]
+     IMDBAggregation.__init__(self)
+  
+  def create_return(self, result, first_column_name):
+    self.values.append(['Director', 'Number of Movies', 'Average'])
+    for director in result.get('result'):
+      newvalue = [director.get("_id").encode("utf-8"), director.get("count"), round(float(director.get("average")),2) ]
+      self.values.append(newvalue)
+
+class TopDirectorsWorseRating(IMDBAggregation):
+  def __init__(self, movie_collection, imdbid):
+     self.collection = movie_collection
+     self.title = "Top 5 Directors Worse Rating (more than 3 movies watched)"
+     self.query =  [
+                    { "$match": {"userid" : imdbid} },
+                    { "$unwind": '$movies' },
+                    {"$group":{"_id":"$movies.Directors", 
+                               "average": {"$avg": "$movies.rated"},
+                               "count": {"$sum": 1}
+                              }
+                    },
+                    { "$match": { "count": { "$gt": 3 } } },
+                    {"$sort": SON([("average", 1), ("_id", -1)])},
                     {"$limit" : 10}
                   ]
      self.columns = [{"_id" :"str"}, {"average" : "int"}]

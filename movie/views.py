@@ -5,7 +5,7 @@ import os
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
-from core.db.database import *#MongoDBConnection, TopDirectorsRating, TotalMinutesWatched, MoviesByYear
+from core.db.database import *
 from core.movieimdb.moviejson import IMDBMovieJson
 from core.movieimdb.extract_csv import IMDB_CSV
 from settings import ROOT_DIR
@@ -29,23 +29,24 @@ def index(request):
 
         mongodb.insert_collection(imdbid, jsonfile)
         
-        #directors_rating = TopDirectorsRating(mongodb.collection)
-        movie_rate_by_year    = MovieRateByYear(mongodb.collection, imdbid)
-        movies_by_year        = MoviesByYear(mongodb.collection, imdbid)
-        total_minutes_watched = TotalMinutesWatched(mongodb.collection, imdbid)
-        top_directors_rating  = TopDirectorsRating(mongodb.collection, imdbid)
-        top_directors_watched = TopDirectorsWatched(mongodb.collection, imdbid)
-        movies_by_genres      = MoviesByGenres(mongodb.collection, imdbid)
-        print movies_by_genres.values
+        movie_rate_by_year         = MovieRateByYear(mongodb.collection, imdbid)
+        movies_by_year             = MoviesByYear(mongodb.collection, imdbid)
+        total_minutes_watched      = TotalMinutesWatched(mongodb.collection, imdbid)
+        top_directors_best_rating  = TopDirectorsBestRating(mongodb.collection, imdbid)
+        top_directors_watched      = TopDirectorsWatched(mongodb.collection, imdbid)
+        movies_by_genres           = MoviesByGenres(mongodb.collection, imdbid)
+        top_directors_worse_rating = TopDirectorsWorseRating(mongodb.collection, imdbid)
+        #print movies_by_genres.values
 
         #mongodb.drop_collection()
 
-    return render_to_response("charts/index.html", {'movie_rate_by_year' : movie_rate_by_year, 
-                                                    "movies_by_year" : movies_by_year, 
-                                                    "total_minutes_watched" : total_minutes_watched,
-                                                    "top_directors_rating" : top_directors_rating,
-                                                    "top_directors_watched" : top_directors_watched,
-                                                    "movies_by_genres" : movies_by_genres,
+    return render_to_response("charts/index.html", {'movie_rate_by_year'         : movie_rate_by_year, 
+                                                    "movies_by_year"             : movies_by_year, 
+                                                    "total_minutes_watched"      : total_minutes_watched,
+                                                    "top_directors_best_rating"  : top_directors_best_rating,
+                                                    "top_directors_worse_rating" : top_directors_worse_rating,
+                                                    "top_directors_watched"      : top_directors_watched,
+                                                    "movies_by_genres"           : movies_by_genres,
                                                     "imdbid" : imdbid})
 
 def information(request):
