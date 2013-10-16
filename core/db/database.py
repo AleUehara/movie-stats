@@ -2,6 +2,7 @@ from pymongo import Connection, MongoClient
 from bson.objectid import ObjectId
 from bson.son import SON
 from bson.code import Code
+import datetime
 
 class MongoDBConnection():
     def __init__(self):
@@ -71,11 +72,19 @@ class IMDBAggregation(IMDB_Data):
      IMDB_Data.__init__(self)
      self.execute_aggregate_list()
 
-
-
-class TopDirectorsBestRating(IMDBAggregation):
+class TopDirectorsRating(IMDBAggregation):
   def __init__(self, movie_collection, imdbid):
      self.collection = movie_collection
+     IMDBAggregation.__init__(self)
+
+  def create_return(self, result, first_column_name):
+    self.values.append(['Director', 'Number of Movies', 'Average'])
+    for director in result.get('result'):
+      newvalue = [director.get("_id").encode("utf-8"), director.get("count"), round(float(director.get("average")),2) ]
+      self.values.append(newvalue)
+
+class TopDirectorsBestRating(TopDirectorsRating):
+  def __init__(self, movie_collection, imdbid):
      self.title = "Top 5 Directors Best Rating (more than 3 movies watched)"
      self.query =  [
                     { "$match": {"userid" : imdbid} },
@@ -90,17 +99,11 @@ class TopDirectorsBestRating(IMDBAggregation):
                     {"$limit" : 10}
                   ]
      self.columns = [{"_id" :"str"}, {"average" : "int"}]
-     IMDBAggregation.__init__(self)
+     TopDirectorsRating.__init__(self, movie_collection, imdbid)
   
-  def create_return(self, result, first_column_name):
-    self.values.append(['Director', 'Number of Movies', 'Average'])
-    for director in result.get('result'):
-      newvalue = [director.get("_id").encode("utf-8"), director.get("count"), round(float(director.get("average")),2) ]
-      self.values.append(newvalue)
 
-class TopDirectorsWorseRating(IMDBAggregation):
+class TopDirectorsWorseRating(TopDirectorsRating):
   def __init__(self, movie_collection, imdbid):
-     self.collection = movie_collection
      self.title = "Top 5 Directors Worse Rating (more than 3 movies watched)"
      self.query =  [
                     { "$match": {"userid" : imdbid} },
@@ -115,14 +118,8 @@ class TopDirectorsWorseRating(IMDBAggregation):
                     {"$limit" : 10}
                   ]
      self.columns = [{"_id" :"str"}, {"average" : "int"}]
-     IMDBAggregation.__init__(self)
+     TopDirectorsRating.__init__(self, movie_collection, imdbid)
   
-  def create_return(self, result, first_column_name):
-    self.values.append(['Director', 'Number of Movies', 'Average'])
-    for director in result.get('result'):
-      newvalue = [director.get("_id").encode("utf-8"), director.get("count"), round(float(director.get("average")),2) ]
-      self.values.append(newvalue)
-
 
 class TopDirectorsWatched(IMDBAggregation):
   def __init__(self, movie_collection, imdbid):
@@ -141,6 +138,32 @@ class TopDirectorsWatched(IMDBAggregation):
      self.columns = [{"_id" :"str"}, {"count" : "int"}]
      IMDBAggregation.__init__(self)
 
+
+class TopDirectorsWatchedLast3Years(IMDBAggregation):
+  def __init__(self, movie_collection, imdbid):
+     self.collection = movie_collection
+     current_year = datetime.datetime.now().year
+     this_year = str(current_year)
+     previous_year = str(current_year - 1)
+     last_previous_year = str(current_year - 2)
+
+     self.title = "Top 5 Directors Watched on the last 3 years. (" +this_year + ", "+previous_year+ ", " +last_previous_year+")"
+     self.query =  [
+                    { "$match": {"userid" : imdbid}},
+                    { "$unwind": '$movies' },
+                    { "$match": {"$or" : [{'movies.Year': this_year}, 
+                                          {'movies.Year': previous_year}, 
+                                          {'movies.Year': last_previous_year}]}},
+                    { "$group":{"_id"  : "$movies.Directors", 
+                                "count": {"$sum": 1}
+                               }
+                    },
+                    {"$sort": SON([("count", -1)])},
+                    {"$limit" : 10}
+                  ]
+
+     self.columns = [{"_id" :"str"},  {"count" : "int"}]
+     IMDBAggregation.__init__(self)
 
 
 
