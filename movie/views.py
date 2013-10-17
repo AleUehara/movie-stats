@@ -12,6 +12,7 @@ from settings import ROOT_DIR
 import datetime
 
 def index(request):
+    #sample: 36594269
     if request.method == 'POST':
         try:
             imdbid = request.POST.getlist("your_IMDB_ID")[0]

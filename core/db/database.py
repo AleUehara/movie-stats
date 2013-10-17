@@ -228,7 +228,7 @@ class BestMovies(IMDBAggregation):
             count = 1
             for data in i.get(key).items():
               if count == 1:
-                movielist.append(str(data[1]))
+                movielist.append(str(data[1].encode("utf-8")))
               elif count == 2:
                 movie_date = datetime.datetime.strptime(data[1], '%Y-%m-%d')
                 movielist.append(movie_date)
