@@ -46,7 +46,7 @@ def main():
     #result = MoviesByGenres(mongodb.collection, imdbid)
     #TopDirectorsWatched(mongodb.collection, imdbid)
     #result = TopDirectorsWorseRating(mongodb.collection, imdbid)
-    result = TopDirectorsWatchedLast3Years(mongodb.collection, imdbid)
+    result = BestMovies(mongodb.collection, imdbid)
     print result.values
 
 

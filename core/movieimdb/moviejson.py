@@ -21,10 +21,13 @@ class IMDBMovieJson():
            username = self.__find_username(row)
 
            row["rated"] = int(row[username])
-           row["IMDb Rating"] = float(row["IMDb Rating"])
+           
+           #this just because the Moneyball doesn't come with rate
+           row["IMDb Rating"] = 7 if row["IMDb Rating"] is "" else float(row["IMDb Rating"])
+           #row["IMDb Rating"] = float(row["IMDb Rating"])
+
            row["Runtime (mins)"] = 0 if row["Runtime (mins)"] is "" else int(row["Runtime (mins)"])
            movie_list.append(row)
-
 
         stringfile = json.dumps( [ row for row in movie_list ] , indent=4)
         movies_json = json.loads(stringfile)

@@ -17,6 +17,7 @@ def index(request):
             imdbid = request.POST.getlist("your_IMDB_ID")[0]
             jsonfile = connect_imdb(imdbid)
         except Exception, e:
+            print e
             return render_to_response("404.html", {'message' : "Data not available for this user"})
 
 
@@ -37,7 +38,7 @@ def index(request):
         movies_by_genres              = MoviesByGenres(mongodb.collection, imdbid)
         top_directors_worse_rating    = TopDirectorsWorseRating(mongodb.collection, imdbid)
         top_directors_watched_3_years = TopDirectorsWatchedLast3Years(mongodb.collection, imdbid)
-        #print movies_by_genres.values
+        best_movies                   = BestMovies(mongodb.collection, imdbid)
 
         #mongodb.drop_collection()
 
@@ -49,8 +50,8 @@ def index(request):
                                                     "top_directors_watched"        : top_directors_watched,
                                                     "top_directors_watched_3_years": top_directors_watched_3_years,
                                                     "movies_by_genres"             : movies_by_genres,
-
-                                                    "imdbid" : imdbid})
+                                                    "best_movies"                  : best_movies,
+                                                    "imdbid"                       : imdbid})
 
 def information(request):
     return render_to_response("emailform.html")

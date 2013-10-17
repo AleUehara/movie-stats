@@ -52,15 +52,27 @@ class IMDB_Data():
         for column_name in columns_name:
           
             key = column_name.keys()[0]
+            
+            '''
+            if type(i.get(key)) == dict:
+              #print i.get(key)
+              for data in i.get(key).items():
+                print data[1]
+                movielist.append(str(data[1]))
+                print datetime.datetime.strptime('2005', '%Y')
+            '''
+            #print i.get(key)
+            #print type(i.get(key))
             if column_name.values()[0] == "str":
               movielist.append(str(i.get(key)))
             elif column_name.values()[0] == "int":
               movielist.append(int(i.get(key)))
             elif column_name.values()[0] == "float":
               movielist.append(round(float(i.get(key)),2))
+            #elif column_name.values()[0] == "float":
         
         self.values.append(movielist)
-    
+        #datetime.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
         
 
 
@@ -83,6 +95,7 @@ class TopDirectorsRating(IMDBAggregation):
       newvalue = [director.get("_id").encode("utf-8"), director.get("count"), round(float(director.get("average")),2) ]
       self.values.append(newvalue)
 
+
 class TopDirectorsBestRating(TopDirectorsRating):
   def __init__(self, movie_collection, imdbid):
      self.title = "Top 5 Directors Best Rating (more than 3 movies watched)"
@@ -101,6 +114,7 @@ class TopDirectorsBestRating(TopDirectorsRating):
      self.columns = [{"_id" :"str"}, {"average" : "int"}]
      TopDirectorsRating.__init__(self, movie_collection, imdbid)
   
+
 
 class TopDirectorsWorseRating(TopDirectorsRating):
   def __init__(self, movie_collection, imdbid):
@@ -165,6 +179,41 @@ class TopDirectorsWatchedLast3Years(IMDBAggregation):
      self.columns = [{"_id" :"str"},  {"count" : "int"}]
      IMDBAggregation.__init__(self)
 
+
+class BestMovies(IMDBAggregation):
+  def __init__(self, movie_collection, imdbid):
+     self.collection = movie_collection
+     self.title = "Best Movies - Rate: 10"
+     self.query =  [
+                    { "$match": {"userid" : imdbid} },
+                    { "$unwind": '$movies' },
+                    { "$match": {'movies.rated': 10} } ,
+                    { "$group":{"_id": {"title" : "$movies.Title", "year" : "$movies.Release Date (month/day/year)", "year2" : "$movies.Release Date (month/day/year)"} }                    },
+                    {"$sort": SON([("_id.year", -1)])},
+                   ]
+     self.columns = [{"_id" :"str"}]
+     IMDBAggregation.__init__(self)
+
+  def create_return(self, result, columns_name):
+    for i in result.get("result"):
+        movielist = []
+        for column_name in columns_name:
+          
+            key = column_name.keys()[0]
+            count = 1
+            for data in i.get(key).items():
+              if count == 1:
+                movielist.append(str(data[1]))
+              elif count == 2:
+                movie_date = datetime.datetime.strptime(data[1], '%Y-%m-%d')
+                movielist.append(movie_date)
+              elif count == 3:
+                movie_date = datetime.datetime.strptime(data[1], '%Y-%m-%d')
+                movielist.append(movie_date)
+
+              count += 1
+        
+        self.values.append(movielist)
 
 
 class MoviesByYear(IMDBAggregation):

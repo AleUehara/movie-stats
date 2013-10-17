@@ -3,8 +3,9 @@
 {% block head %}
     <!--Load the AJAX API-->
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
     <script type="text/javascript">
-      google.load('visualization', '1.0', {'packages':['corechart']});
+      google.load('visualization', '1.0', {'packages':['corechart', 'timeline']});
 
       //chart 2
       google.setOnLoadCallback(drawBarChart);
@@ -109,6 +110,41 @@
       }
 
 
+      google.setOnLoadCallback(drawTimelineChart);
+      function drawTimelineChart() {
+        var container = document.getElementById('chart_best_movies');
+
+        var chart = new google.visualization.Timeline(container);
+
+        var dataTable = new google.visualization.DataTable();
+
+        dataTable.addColumn({ type: 'string', id: 'Movie' });
+        dataTable.addColumn({ type: 'date', id: 'Start' });
+        dataTable.addColumn({ type: 'date', id: 'End' });
+
+        var best_movies = new Array();
+        {% for movie_name in best_movies.values %}
+            var table_movie = new Array();
+            var count = 1
+            {% for movie_data in movie_name %}
+               if (count == 1){
+                  table_movie.push("{{movie_data}}");
+               }else{
+                  table_movie.push( new Date("{{ movie_data.isoformat }}") );
+               }
+               count++
+            {% endfor %}
+            best_movies.push(table_movie);
+        {% endfor %}
+
+        dataTable.addRows(best_movies);
+
+
+        
+        
+        chart.draw(dataTable);
+
+      }
       </script>
 {% endblock %}
 
@@ -129,6 +165,7 @@
         <h4>{{ movies_by_genres.title }}</h4>
         <p><div id="chart_movies_by_genres"></div></p>
 
+
       </div>
 
       <div class="span6">
@@ -146,7 +183,9 @@
 
 
       </div>
+    
     </div>
+    <h4>{{ best_movies.title }}</h4>
+    <p><div id="chart_best_movies"></div></p>
 
 {% endblock %}
-                                                                                                                                                                                                   102,1         Bot
