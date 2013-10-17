@@ -109,7 +109,7 @@ class TopDirectorsBestRating(TopDirectorsRating):
                     },
                     { "$match": { "count": { "$gt": 3 } } },
                     {"$sort": SON([("average", -1), ("_id", -1)])},
-                    {"$limit" : 10}
+                    {"$limit" : 5}
                   ]
      self.columns = [{"_id" :"str"}, {"average" : "int"}]
      TopDirectorsRating.__init__(self, movie_collection, imdbid)
@@ -129,7 +129,7 @@ class TopDirectorsWorseRating(TopDirectorsRating):
                     },
                     { "$match": { "count": { "$gt": 3 } } },
                     {"$sort": SON([("average", 1), ("_id", -1)])},
-                    {"$limit" : 10}
+                    {"$limit" : 5}
                   ]
      self.columns = [{"_id" :"str"}, {"average" : "int"}]
      TopDirectorsRating.__init__(self, movie_collection, imdbid)
@@ -173,7 +173,7 @@ class TopDirectorsWatchedLast3Years(IMDBAggregation):
                                }
                     },
                     {"$sort": SON([("count", -1)])},
-                    {"$limit" : 10}
+                    {"$limit" : 5}
                   ]
 
      self.columns = [{"_id" :"str"},  {"count" : "int"}]

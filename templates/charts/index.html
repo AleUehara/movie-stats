@@ -17,7 +17,8 @@
         data.addRows( {{ movies_by_year.values|safe }} );
         var options = {
                      'width':400,
-                     'height':300};
+                     'height':300,
+                     'legend' : {'position': 'bottom'} };
         barsVisualization = new google.visualization.ColumnChart(document.getElementById('chart_movies_by_year'));
         barsVisualization.draw(data, options);
         google.visualization.events.addListener(barsVisualization, 'onmouseover', barMouseOver);
@@ -31,7 +32,8 @@
         var options1 = {
                      'width':400,
                      'height':300,
-                     'colors': ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6']};
+                     'colors': ['#e0440e', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
+                     'legend' : {'position': 'bottom'} };
         barsVisualization1 = new google.visualization.ColumnChart(document.getElementById('chart_movie_rate_by_year'));
         barsVisualization1.draw(data1, options1);
         google.visualization.events.addListener(barsVisualization1, 'onmouseover', barMouseOver);
@@ -57,7 +59,8 @@
           {{top_directors_best_rating.values|safe}}
         );
         var options = {
-          vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
+          vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}},
+          'legend' : {'position': 'bottom'} 
         };
         var chart = new google.visualization.BarChart(document.getElementById('chart_top_directors_best_rating'));
         chart.draw(data, options);
@@ -67,7 +70,8 @@
           {{top_directors_worse_rating.values|safe}}
         );
         var options0 = {
-          vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
+          vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}},
+          'legend' : {'position': 'bottom'} 
         };
         var chart = new google.visualization.BarChart(document.getElementById('chart_top_directors_worse_rating'));
         chart.draw(data0, options0);
@@ -77,7 +81,8 @@
           {{top_directors_watched.values|safe}}
         );
         var options1 = {
-          vAxis: {title: 'Director',  titleTextStyle: {color: 'red'}}
+          vAxis: {title: 'Director',  titleTextStyle: {color: 'red'}},
+          'legend' : {'position': 'none'} 
         };
         var chart1 = new google.visualization.BarChart(document.getElementById('chart_top_directors_watched'));
         chart1.draw(data1, options1);
@@ -88,7 +93,8 @@
           {{top_directors_watched_3_years.values|safe}}
         );
         var options2 = {
-          vAxis: {title: 'Director',  titleTextStyle: {color: 'red'}}
+          vAxis: {title: 'Director',  titleTextStyle: {color: 'red'}},
+          'legend' : {'position': 'none'} 
         };
         var chart2 = new google.visualization.BarChart(document.getElementById('chart_top_directors_watched_3_years'));
         chart2.draw(data2, options2);
@@ -138,10 +144,6 @@
         {% endfor %}
 
         dataTable.addRows(best_movies);
-
-
-        
-        
         chart.draw(dataTable);
 
       }
