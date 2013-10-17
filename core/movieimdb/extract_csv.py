@@ -12,7 +12,6 @@ except:
 
 CONFIG = ConfigParser.ConfigParser()
 CONFIG.read(os.path.join(os.path.dirname(os.path.realpath(__file__)), "imdb.cfg"))
-#ROOT_DIR="/home/alexandre/scripts/moviestats"
 
 
 

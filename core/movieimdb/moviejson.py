@@ -29,6 +29,32 @@ class IMDBMovieJson():
            row["Runtime (mins)"] = 0 if row["Runtime (mins)"] is "" else int(row["Runtime (mins)"])
            movie_list.append(row)
 
+           '''
+           Actors
+           '''
+
+           '''
+           import urllib2
+           imdb_id = row["const"]
+           link = "http://www.omdbapi.com/?i="+imdb_id
+           response = urllib2.urlopen(link)
+           movie_data = response.read()
+           #print json.loads(movie_data).get("Actors")
+           row["actors"] = json.loads(movie_data).get("Actors")
+           '''
+
+           '''
+           import urllib2
+           imdb_id = row["const"]
+           link = "http://mymovieapi.com/?type=json&id="+imdb_id
+           response = urllib2.urlopen(link)
+           movie_data = response.read()
+           #print json.loads(movie_data).get("actors")
+           row["actors"] = json.loads(movie_data).get("actors")
+           print "ok"
+           '''
+
+
         stringfile = json.dumps( [ row for row in movie_list ] , indent=4)
         movies_json = json.loads(stringfile)
 
