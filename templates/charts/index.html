@@ -147,6 +147,34 @@
         chart.draw(dataTable);
 
       }
+
+
+      google.load('visualization', '1', {packages:['table']});
+      google.setOnLoadCallback(drawTable);
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Title');
+        data.addColumn('number', 'Minutes');
+        data.addRows(
+          {{longest_movies.values|safe}}
+          );
+
+        var table = new google.visualization.Table(document.getElementById('chart_longest_movies'));
+        table.draw(data, {showRowNumber: true});
+
+
+        var data1 = new google.visualization.DataTable();
+        data1.addColumn('string', 'Title');
+        data1.addColumn('number', 'Minutes');
+        data1.addRows(
+          {{shortest_movies.values|safe}}
+          );
+
+        var table1 = new google.visualization.Table(document.getElementById('chart_shortest_movies'));
+        table1.draw(data1, {showRowNumber: true});
+
+      }
+
       </script>
 {% endblock %}
 
@@ -167,6 +195,11 @@
         <h4>{{ movies_by_genres.title }}</h4>
         <p><div id="chart_movies_by_genres"></div></p>
 
+        <h4>{{ longest_movies.title }}</h4>
+        <p><div id='chart_longest_movies'></div></p>
+
+        <h4>{{ shortest_movies.title }}</h4>
+        <p><div id='chart_shortest_movies'></div></p>
 
       </div>
 
@@ -182,7 +215,6 @@
 
         <h4>{{ top_directors_watched_3_years.title }}</h4>
         <p><div id="chart_top_directors_watched_3_years"></div></p>
-
 
       </div>
     

@@ -9,7 +9,7 @@ from core.db.database import *
 from core.movieimdb.moviejson import IMDBMovieJson
 from core.movieimdb.extract_csv import IMDB_CSV
 from settings import ROOT_DIR
-
+import datetime
 
 def index(request):
     if request.method == 'POST':
@@ -39,6 +39,8 @@ def index(request):
         top_directors_worse_rating    = TopDirectorsWorseRating(mongodb.collection, imdbid)
         top_directors_watched_3_years = TopDirectorsWatchedLast3Years(mongodb.collection, imdbid)
         best_movies                   = BestMovies(mongodb.collection, imdbid)
+        longest_movies                = LongestMovie(mongodb.collection, imdbid)
+        shortest_movies               = ShortestMovie(mongodb.collection, imdbid)
 
         #mongodb.drop_collection()
 
@@ -51,6 +53,8 @@ def index(request):
                                                     "top_directors_watched_3_years": top_directors_watched_3_years,
                                                     "movies_by_genres"             : movies_by_genres,
                                                     "best_movies"                  : best_movies,
+                                                    "longest_movies"               : longest_movies,
+                                                    "shortest_movies"              : shortest_movies,
                                                     "imdbid"                       : imdbid})
 
 def information(request):
