@@ -10,13 +10,14 @@ from core.movieimdb.moviejson import IMDBMovieJson
 from core.movieimdb.extract_csv import IMDB_CSV
 from settings import ROOT_DIR
 import datetime
-
+from googleimages import images
 def index(request):
     #sample: 36594269
     if request.method == 'POST':
         try:
             imdbid = request.POST.getlist("your_IMDB_ID")[0]
             jsonfile = connect_imdb(imdbid)
+            
         except Exception, e:
             print e
             return render_to_response("404.html", {'message' : "Data not available for this user"})
@@ -60,6 +61,10 @@ def index(request):
 
 def information(request):
     return render_to_response("emailform.html")
+
+def image(request):
+    image = images.GooglePicasa().random_image()
+    return render_to_response("image.html", {'random_image'           : image})
 
 def connect_imdb(imdbid):
         imdbcsv = IMDB_CSV(imdbid)

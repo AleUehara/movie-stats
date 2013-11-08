@@ -16,5 +16,6 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
     (r'^charts', 'movie.views.index'),
     (r'^$', 'imdbaccount.views.form'),
-    (r'^information', 'movie.views.information')
+    (r'^information', 'movie.views.information'),
+    (r'^image', 'movie.views.image')
 )
